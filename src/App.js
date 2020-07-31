@@ -1,6 +1,9 @@
 import React from 'react';
-import logo from './logo.svg';
 import './App.css';
+import FileDetail from './file-detail/FileDetail';
+import FileExplorer from './file-explorer/FileExplorer';
+import TagList from './tagging/TagList';
+import pathUtil from 'path';
 
 const electron = window.require('electron');
 const fs = electron.remote.require('fs');
@@ -8,37 +11,37 @@ const fs = electron.remote.require('fs');
 class App extends React.Component {
   constructor() {
     super();
+
     this.state = {
-      files: [],
+      selectedDir: '/',
+      selectedFile: null,
     };
   }
 
-  componentDidMount() {
-    fs.readdir('.', (err, files) => {
-      this.setState({ files });
-    });
+  setSelectedPath(path) {
+    path = pathUtil.resolve(path);
+    const stats = fs.lstatSync(path);
+    if (stats.isDirectory()) {
+      this.setState({
+        selectedDir: path,
+        selectedFile: null,
+      })
+    } else {
+      this.setState({ selectedFile: path });
+    }
   }
 
   render() {
     return <div className="App">
-      <header className="App-header">
-        {this.state.files.map((x) =>
-          <div key={x}>{x}</div>
-        )}
-
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <FileExplorer
+        selectedDir={this.state.selectedDir}
+        selectedFile={this.state.selectedFile}
+        selectPath={(path) => this.setSelectedPath(path)}
+      />
+      <TagList />
+      <FileDetail
+        filePath={this.state.selectedFile}
+      />
     </div>;
   }
 }

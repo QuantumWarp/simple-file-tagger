@@ -1,0 +1,16 @@
+.File-node {
+  cursor: pointer;
+  display: flex;
+  flex-direction: row;
+}
+
+.File-node:hover {
+  background-color: grey;
+}
+
+.icon {
+  width: calc(10px + 3vmin);
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
