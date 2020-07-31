@@ -1,0 +1,7 @@
+.Directory-path {
+  cursor: pointer;
+}
+
+.Segment:hover {
+  background-color: grey;
+}

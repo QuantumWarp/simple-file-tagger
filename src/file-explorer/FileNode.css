@@ -2,6 +2,7 @@
   cursor: pointer;
   display: flex;
   flex-direction: row;
+  font-size: calc(10px + 0.8vmin);
 }
 
 .File-node:hover {
@@ -9,7 +10,7 @@
 }
 
 .icon {
-  width: calc(10px + 3vmin);
+  width: calc(10px + 2vmin);
   display: flex;
   flex-direction: row;
   align-items: center;

@@ -1,5 +1,6 @@
 import React from 'react';
 import './App.css';
+import PathHeader from './header/PathHeader';
 import FileDetail from './file-detail/FileDetail';
 import FileExplorer from './file-explorer/FileExplorer';
 import TagList from './tagging/TagList';
@@ -13,35 +14,43 @@ class App extends React.Component {
     super();
 
     this.state = {
-      selectedDir: '/',
-      selectedFile: null,
+      path: '/',
+      filename: null,
     };
   }
 
-  setSelectedPath(path) {
-    path = pathUtil.resolve(path);
-    const stats = fs.lstatSync(path);
+  setLocation(fullPath) {
+    fullPath = pathUtil.resolve(fullPath);
+    const stats = fs.lstatSync(fullPath);
     if (stats.isDirectory()) {
-      this.setState({
-        selectedDir: path,
-        selectedFile: null,
-      })
+      this.setState({ path: fullPath, filename: null });
     } else {
-      this.setState({ selectedFile: path });
+      const filename = fullPath.split('/')[fullPath.split('/').length - 1];
+      const path = fullPath.substring(0, fullPath.length - filename.length);
+      this.setState({ path, filename });
     }
   }
 
   render() {
     return <div className="App">
-      <FileExplorer
-        selectedDir={this.state.selectedDir}
-        selectedFile={this.state.selectedFile}
-        selectPath={(path) => this.setSelectedPath(path)}
+      <PathHeader
+        path={this.state.path}
       />
-      <TagList />
-      <FileDetail
-        filePath={this.state.selectedFile}
-      />
+
+      <main>
+        <FileExplorer
+          path={this.state.path}
+          filename={this.state.filename}
+          selectLocation={(fullPath) => this.setLocation(fullPath)}
+        />
+
+        <TagList />
+
+        <FileDetail
+          path={this.state.path}
+          filename={this.state.filename}
+        />
+      </main>
     </div>;
   }
 }

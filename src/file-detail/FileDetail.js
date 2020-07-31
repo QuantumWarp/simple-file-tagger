@@ -10,15 +10,13 @@ class FileDetail extends React.Component {
     this.state = { imageData: null };
   }
 
-  get info() {
-    return FileHelper.getInfo(this.props.filePath);
-  }
-
   componentDidUpdate(prevProps) {
-    if (this.props.filePath !== prevProps.filePath) {
-      fs.readFile(this.props.filePath, (err, data) => {
+    if (prevProps.filename && !this.props.filename) {
+      this.setState({ imageData: null });
+    } else if (prevProps.filename !== this.props.filename) {
+      fs.readFile(this.props.path + this.props.filename, (err, data) => {
         this.setState({
-          imageData: `data:image/${FileHelper.getExtension(this.props.filePath)};base64,${data.toString('base64')}`
+          imageData: `data:image/${FileHelper.getExtension(this.props.filename)};base64,${data.toString('base64')}`
         });
       })
     }
@@ -27,7 +25,7 @@ class FileDetail extends React.Component {
   render() {
     return <div className="File-detail">
       <div>File Detail</div>
-      <div>{this.props.file}</div>
+      <div>{this.props.filename}</div>
       <img src={this.state.imageData} alt="File" />
     </div>;
   }

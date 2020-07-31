@@ -15,14 +15,14 @@ class FileList extends React.Component {
   }
 
   componentDidUpdate(prevProps) {
-    if (this.props.directory !== prevProps.directory) {
+    if (this.props.path !== prevProps.path) {
       this.loadFiles();
     }
   }
 
   loadFiles() {
     fs.readdir(
-      this.props.directory,
+      this.props.path,
       { withFileTypes: true },
       (err, files) => {
         files = [{ name: '..' }].concat(files);
@@ -36,7 +36,7 @@ class FileList extends React.Component {
         (x) => <FileNode
           key={x.name}
           nodeData={x}
-          onClick={() => this.props.selectEntry(x.name)}
+          onClick={() => this.props.selectLocation(`${this.props.path}/${x.name}`)}
         />
       )}
     </div>;
