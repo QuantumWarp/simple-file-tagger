@@ -3,7 +3,7 @@ import './App.css';
 import PathHeader from './header/PathHeader';
 import FileDetail from './file-detail/FileDetail';
 import FileExplorer from './file-explorer/FileExplorer';
-import TagList from './tagging/TagList';
+import TagContainer from './tagging/TagContainer';
 import pathUtil from 'path';
 
 const electron = window.require('electron');
@@ -14,7 +14,7 @@ class App extends React.Component {
     super();
 
     this.state = {
-      path: '/',
+      path: '/Development/react/simple-file-tagger/test-files',
       filename: null,
     };
   }
@@ -44,7 +44,10 @@ class App extends React.Component {
           selectLocation={(fullPath) => this.setLocation(fullPath)}
         />
 
-        <TagList />
+        <TagContainer
+          path={this.state.path}
+          filename={this.state.filename}
+        />
 
         <FileDetail
           path={this.state.path}
