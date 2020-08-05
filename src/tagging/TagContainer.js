@@ -9,6 +9,7 @@ class TagContainer extends React.Component {
     super(props);
     this.state = {
       name: '',
+      dateTag: '',
       tags: [],
       extension: '',
     };
@@ -17,7 +18,8 @@ class TagContainer extends React.Component {
   componentDidUpdate(prevProps) {
     if (this.props.path !== prevProps.path || this.props.filename !== prevProps.filename) {
       if (this.props.filename) {
-        this.setState(FileHelper.parseTags(this.props.filename));
+        const parsedFile = FileHelper.parseFilename(this.props.filename);
+        this.setState(parsedFile);
       }
     }
   }
@@ -37,8 +39,8 @@ class TagContainer extends React.Component {
       />
 
       <TagDatePicker
-        value={this.state.date}
-        onChange={(date) => this.setState({ date })}
+        value={this.state.dateTag}
+        onChange={(dateTag) => this.setState({ dateTag })}
       />
 
       <TagList

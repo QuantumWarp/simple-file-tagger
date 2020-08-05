@@ -16,9 +16,10 @@ class FileHelper {
     return nameSplit[nameSplit.length - 1];
   }
 
-  static parseTags(filename) {
+  static parseFilename(filename) {
     let extension = '';
     let tags = [];
+    let dateTag = '';
     let name = filename;
 
     const lastDotIndex = name.lastIndexOf('.');
@@ -31,15 +32,23 @@ class FileHelper {
     const lastTagIndex = name.lastIndexOf(']');
     if (startTagIndex !== -1 && lastTagIndex !== -1) {
       tags = name.substring(startTagIndex + 1, lastTagIndex).split(',');
+      dateTag = tags.find((x) => this.isDateTag(x));
+      tags = tags.filter((x) => x !== dateTag);
       name = name.substring(0, startTagIndex).trimEnd();
     }
 
-    return { name, tags, extension };
+    return { name, tags, dateTag, extension };
   }
 
-  static createFilename({ name, tags, extension }) {
+  static isDateTag(tag) {
+    return tag.match(/^\d\d\d\d(-\d\d)?(-\d\d)?$/);
+  }
+
+  static createFilename({ name, tags, dateTag, extension }) {
+    const sortedTags = tags.sort();
+    const combinedTags = dateTag ? [dateTag].concat(sortedTags) : sortedTags;
     let filename = name;
-    filename += tags.length === 0 ? '' : ` [${tags.sort().join(',')}]`;
+    filename += combinedTags.length === 0 ? '' : ` [${combinedTags.join(',')}]`;
     filename += `.${extension}`;
     return filename;
   }
