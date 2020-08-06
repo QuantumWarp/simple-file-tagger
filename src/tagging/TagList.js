@@ -17,8 +17,8 @@ class TagList extends React.Component {
     }
   }
 
-  componentDidUpdate() {
-    if (this.state.tagOptions) {
+  componentDidUpdate(prevProps, prevState) {
+    if (this.state.tagOptions.length !== prevState.tagOptions.length) {
       localStorage.setItem('tagOptions', JSON.stringify(this.state.tagOptions));
     }
 

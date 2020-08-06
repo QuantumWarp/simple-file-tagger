@@ -1,5 +1,6 @@
 import React from 'react';
 import './App.css';
+import BookmarkHeader from './header/BookmarkHeader';
 import PathHeader from './header/PathHeader';
 import FileDetail from './file-detail/FileDetail';
 import FileExplorer from './file-explorer/FileExplorer';
@@ -26,16 +27,24 @@ class App extends React.Component {
       this.setState({ path: fullPath, filename: null });
     } else {
       const filename = fullPath.split('/')[fullPath.split('/').length - 1];
-      const path = fullPath.substring(0, fullPath.length - filename.length);
+      const path = fullPath.substring(0, fullPath.length - filename.length - 1);
       this.setState({ path, filename });
     }
   }
 
   render() {
     return <div className="App">
-      <PathHeader
-        path={this.state.path}
-      />
+
+      <div>
+        <BookmarkHeader
+          path={this.state.path}
+          onPathChange={(event) => this.setLocation(event)}
+        />
+        <PathHeader
+          path={this.state.path}
+          onPathChange={(event) => this.setLocation(event)}
+        />
+      </div>
 
       <main>
         <FileExplorer

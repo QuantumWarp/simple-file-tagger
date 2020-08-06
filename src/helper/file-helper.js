@@ -4,9 +4,13 @@ class FileHelper {
       isUp: entry.name === '..',
       isDirectory: entry.isDirectory && entry.isDirectory(),
       isFile: entry.isFile && entry.isFile(),
-      isImage: ['.png', '.jpg', '.jpeg'].find((x) => entry.name.endsWith(x)),
+      isImage: this.isImage(entry.name),
       extension: this.getExtension(entry.name),
     };
+  }
+
+  static isImage(filename) {
+    return ['.png', '.jpg', '.jpeg'].find((x) => filename.endsWith(x));
   }
 
   static getExtension(path) {
