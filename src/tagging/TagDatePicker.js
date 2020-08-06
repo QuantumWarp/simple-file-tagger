@@ -45,8 +45,7 @@ class TagDatePicker extends React.Component {
       return;
     }
 
-    if (this.state.date.startsWith(value)) return;
-
+    // console.log(value)
     const valueSplit = value.split('-');
     this.setState({
       date: value + (valueSplit[1] ? '' : '-01') + (valueSplit[2] ? '' : '-01'),
@@ -78,16 +77,22 @@ class TagDatePicker extends React.Component {
     return true;
   }
 
+  dateChanged(date) {
+    const hadDate = !this.state.date;
+    if (hadDate) {
+      this.setState({ date, day: true, month: true, year: true });
+    } else {
+      this.setState({ date });
+    }
+  }
+
   render() {
     return <div className="Tag-date-picker">
-
-      { this.test }
-
       <div>
         <input
           type="date"
           value={this.state.date}
-          onChange={(event) => this.setState({ date: event.target.value })}
+          onChange={(event) => this.dateChanged(event.target.value)}
         />
       </div>
 

@@ -3,7 +3,7 @@ import './App.css';
 import BookmarkHeader from './header/BookmarkHeader';
 import PathHeader from './header/PathHeader';
 import FileDetail from './file-detail/FileDetail';
-import FileExplorer from './file-explorer/FileExplorer';
+import FileList from './file-explorer/FileList';
 import TagContainer from './tagging/TagContainer';
 import pathUtil from 'path';
 
@@ -17,7 +17,19 @@ class App extends React.Component {
     this.state = {
       path: '/Development/react/simple-file-tagger/test-files',
       filename: null,
+      files: [],
     };
+  }
+
+
+  componentDidMount() {
+    this.loadFiles();
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    if (this.state.path !== prevState.path) {
+      this.loadFiles();
+    }
   }
 
   setLocation(fullPath) {
@@ -32,11 +44,27 @@ class App extends React.Component {
     }
   }
 
+  loadFiles() {
+    fs.readdir(
+      this.state.path,
+      { withFileTypes: true },
+      (err, files) => {
+        files = [{ name: '..' }].concat(files);
+        this.setState({ files });
+      });
+  }
+
   updateFilename(newFilename) {
+    const files = [...this.state.files];
+    const file = this.state.files.find((x) => x.name === this.state.filename);
+    const index = files.indexOf(file);
+    const newFile = { ...file, name: newFilename };
+    files[index] = newFile;
+
     fs.rename(
       `${this.state.path}/${this.state.filename}`,
       `${this.state.path}/${newFilename}`,
-      () => this.setState({ filename: newFilename }),
+      () => this.setState({ files, filename: newFilename }),
     );
   }
 
@@ -54,10 +82,11 @@ class App extends React.Component {
       </div>
 
       <main>
-        <FileExplorer
+        <FileList
           path={this.state.path}
           filename={this.state.filename}
-          selectLocation={(fullPath) => this.setLocation(fullPath)}
+          files={this.state.files}
+          onLocationSelected={(fullPath) => this.setLocation(fullPath)}
         />
 
         <TagContainer
