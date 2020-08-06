@@ -18,6 +18,21 @@ class FileList extends React.Component {
     if (this.props.path !== prevProps.path) {
       this.loadFiles();
     }
+
+    if (this.props.filename !== prevProps.filename
+      && this.state.files.find((x) => x.name === prevProps.filename)
+    ) {
+      console.log('Update')
+      const files = [...this.state.files];
+      const file = this.state.files.find((x) => x.name === prevProps.filename);
+      const index = files.indexOf(file);
+      const newFile = {
+        ...file,
+        name: this.props.filename,
+      };
+      files[index] = newFile;
+      this.setState({ files });
+    }
   }
 
   loadFiles() {
@@ -35,6 +50,7 @@ class FileList extends React.Component {
       {this.state.files.map(
         (x) => <FileNode
           key={x.name}
+          selected={x.name === this.props.filename}
           nodeData={x}
           onClick={() => this.props.selectLocation(`${this.props.path}/${x.name}`)}
         />

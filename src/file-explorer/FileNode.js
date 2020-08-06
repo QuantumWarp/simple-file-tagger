@@ -28,6 +28,7 @@ class FileNode extends React.Component {
       </span>
 
       <span>{this.props.nodeData.name}</span>
+      {this.props.selected && <span> (Selected)</span>}
     </div>;
   }
 }

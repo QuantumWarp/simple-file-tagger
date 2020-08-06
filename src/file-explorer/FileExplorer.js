@@ -7,6 +7,7 @@ class FileExplorer extends React.Component {
     return <div className="File-explorer">
       <FileList
         path={this.props.path}
+        filename={this.props.filename}
         selectLocation={(fullPath) => this.props.selectLocation(fullPath)}
       />
     </div>;

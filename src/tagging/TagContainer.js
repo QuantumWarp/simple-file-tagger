@@ -15,10 +15,25 @@ class TagContainer extends React.Component {
     };
   }
 
-  componentDidUpdate(prevProps) {
-    if (this.props.path !== prevProps.path || this.props.filename !== prevProps.filename) {
+  componentDidUpdate(prevProps, prevState) {
+    if (!this.intialUpdate
+      && (this.state.name !== prevState.name
+      || this.state.dateTag !== prevState.dateTag
+      || this.state.tags.length !== prevState.tags.length
+      || this.state.extension !== prevState.extension)
+    ) {
+      const newFilename = FileHelper.createFilename(this.state);
+      this.props.onFilenameChange(newFilename);
+    }
+
+    this.intialUpdate = false;
+
+    if (this.props.path !== prevProps.path
+      || this.props.filename !== prevProps.filename
+    ) {
       if (this.props.filename) {
         const parsedFile = FileHelper.parseFilename(this.props.filename);
+        this.intialUpdate = true;
         this.setState(parsedFile);
       }
     }
@@ -26,8 +41,6 @@ class TagContainer extends React.Component {
 
   render() {
     return <div className="Tag-container">
-      {FileHelper.createFilename(this.state)}
-
       <input
         value={this.state.name}
         onChange={(event) => this.setState({ name: event.target.value })}

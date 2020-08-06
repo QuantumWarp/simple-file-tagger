@@ -32,9 +32,16 @@ class App extends React.Component {
     }
   }
 
+  updateFilename(newFilename) {
+    fs.rename(
+      `${this.state.path}/${this.state.filename}`,
+      `${this.state.path}/${newFilename}`,
+      () => this.setState({ filename: newFilename }),
+    );
+  }
+
   render() {
     return <div className="App">
-
       <div>
         <BookmarkHeader
           path={this.state.path}
@@ -56,6 +63,7 @@ class App extends React.Component {
         <TagContainer
           path={this.state.path}
           filename={this.state.filename}
+          onFilenameChange={(newFilename) => this.updateFilename(newFilename)}
         />
 
         <FileDetail
