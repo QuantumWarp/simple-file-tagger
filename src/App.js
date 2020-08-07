@@ -1,6 +1,7 @@
 import React from 'react';
 import './App.css';
 import BookmarkHeader from './header/BookmarkHeader';
+import DiskHeader from './header/DiskHeader';
 import PathHeader from './header/PathHeader';
 import FileDetail from './file-detail/FileDetail';
 import FileList from './file-explorer/FileList';
@@ -9,20 +10,23 @@ import pathUtil from 'path';
 
 const electron = window.require('electron');
 const fs = electron.remote.require('fs');
+const nodeDiskInfo = electron.remote.require('node-disk-info');
 
 class App extends React.Component {
   constructor() {
     super();
 
     this.state = {
-      path: '/Development/react/simple-file-tagger/test-files',
+      path: 'E:/Development/react/simple-file-tagger/test-files',
       filename: null,
       files: [],
+      disks: [],
     };
   }
 
 
-  componentDidMount() {
+  async componentDidMount() {
+    this.loadDisks();
     this.loadFiles();
   }
 
@@ -33,7 +37,10 @@ class App extends React.Component {
   }
 
   setLocation(fullPath) {
-    fullPath = pathUtil.resolve(fullPath);
+    if (!this.state.disks.find((x) => fullPath.startsWith(x))) {
+      fullPath = pathUtil.resolve(fullPath);
+    }
+    console.log(fullPath)
     const stats = fs.lstatSync(fullPath);
     if (stats.isDirectory()) {
       this.setState({ path: fullPath, filename: null });
@@ -54,6 +61,11 @@ class App extends React.Component {
       });
   }
 
+  async loadDisks() {
+    const disks = await nodeDiskInfo.getDiskInfo();
+    this.setState({ disks: disks.map((x) => x.mounted) });
+  }
+
   updateFilename(newFilename) {
     const files = [...this.state.files];
     const file = this.state.files.find((x) => x.name === this.state.filename);
@@ -71,6 +83,11 @@ class App extends React.Component {
   render() {
     return <div className="App">
       <div>
+        <DiskHeader
+          path={this.state.path}
+          disks={this.state.disks}
+          onPathChange={(event) => this.setLocation(event)}
+        />
         <BookmarkHeader
           path={this.state.path}
           onPathChange={(event) => this.setLocation(event)}
