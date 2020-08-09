@@ -1,3 +1,25 @@
 .Tag-container {
-  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  padding: 10px 20px;
+  overflow: hidden;
+}
+
+.Tag-file-info {
+  display: flex;
+  flex-direction: row;
+}
+
+.Name {
+  flex: 5;
+}
+
+.Extension {
+  flex: 3;
+  margin-left: 20px;
+}
+
+.Message {
+  margin-top: 50px;
 }

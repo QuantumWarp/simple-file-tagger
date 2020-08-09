@@ -1,5 +1,6 @@
 import React from 'react';
 import './TagList.css';
+import { FaTrash } from 'react-icons/fa';
 
 class TagList extends React.Component {
   constructor(props) {
@@ -57,22 +58,34 @@ class TagList extends React.Component {
   }
 
   render() {
-    return <div className="Tag-list">
-      <input
-        value={this.state.newTagInput}
-        onChange={(event) => this.setState({ newTagInput: event.target.value })}
-      />
-      <button onClick={() => this.addTag()}>Add Tag</button>
-
-      {this.state.tagOptions.sort().map((x) => <div key={x}>
-        {x}
+    return <div className="Tag-list"> 
+      <label>Tag List</label>
+      <div className="Tag-add">
         <input
-          type="checkbox"
-          checked={this.props.tags.includes(x)}
-          onChange={(event) => this.updateTagChecked(x, event.target.value)}
+          type="text"
+          value={this.state.newTagInput}
+          onChange={(event) => this.setState({ newTagInput: event.target.value })}
         />
-        <button onClick={() => this.removeTag(x)}>Remove</button>
-      </div>)}
+        <button className="clicky" onClick={() => this.addTag()}>Add Tag</button>
+      </div>
+
+      <div className="List">
+        {this.state.tagOptions.sort().map((x) => <div
+          className="Tag"
+          key={x}
+        >
+          <label className="checkbox">
+            {x}
+            <input
+              type="checkbox"
+              checked={this.props.tags.includes(x)}
+              onChange={(event) => this.updateTagChecked(x, event.target.value)}
+            />
+            <div className="box"></div>
+          </label>
+          <button><FaTrash onClick={() => this.removeTag(x)}>Remove</FaTrash></button>
+        </div>)}
+      </div>
     </div>;
   }
 }

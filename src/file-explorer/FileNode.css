@@ -9,6 +9,10 @@
   background-color: grey;
 }
 
+.Selected {
+  background-color: grey;
+}
+
 .icon {
   width: calc(10px + 2vmin);
   display: flex;

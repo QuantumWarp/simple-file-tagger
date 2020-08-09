@@ -1,10 +1,15 @@
 import React from 'react';
 import './BookmarkHeader.css';
+import { FaBookmark, FaTrash, FaRegStar, FaStar } from 'react-icons/fa';
+import Dropdown from '../controls/Dropdown';
 
 class BookmarkHeader extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { bookmarks: [] };
+    this.state = {
+      dropdownOpen: false,
+      bookmarks: [],
+    };
   }
 
   get currentBookmark() {
@@ -36,28 +41,38 @@ class BookmarkHeader extends React.Component {
     this.setState({ bookmarks: newBookmarks });
   }
 
-  removeBookmark(bookmark) {
-    const newBookmarks = this.state.bookmarks.filter([bookmark]);
+  removeBookmark(path) {
+    const newBookmarks = this.state.bookmarks.filter((x) => x.path !== path);
     this.setState({ bookmarks: newBookmarks });
   }
 
   render() {
     return <div className="Bookmark-header">
-      <select
-        value={this.currentBookmark ? this.currentBookmark.path : ''}
-        onChange={(event) => this.props.onPathChange(event.target.value)}
+      <button
+        title="Bookmarks"
+        onClick={() => this.setState({ dropdownOpen: !this.state.dropdownOpen })}
       >
-        <option>Bookmarks</option>
+        <FaBookmark></FaBookmark>
+      </button>
+
+      <button title={this.currentBookmark ? 'Unfavourite' : 'Favourite'}>
+        {!this.currentBookmark && <FaRegStar onClick={() => this.addBookmark()}></FaRegStar>}
+        {this.currentBookmark && <FaStar onClick={() => this.removeBookmark(this.props.path)}></FaStar>}
+      </button>
+
+      <Dropdown open={this.state.dropdownOpen}>
         {this.state.bookmarks.map((x) =>
-          <option
-            key={x.name}
-            value={x.path}
+          <Dropdown.Item
+            key={x.path}
+            onClick={() => this.props.onPathChange(x.path)}
           >
-            {x.name}
-          </option>
+            <div title={x.path}>
+              <span>{x.name}</span>
+              <FaTrash onClick={() => this.removeBookmark(x.path)}></FaTrash>
+            </div>
+          </Dropdown.Item>
         )}
-      </select>
-      <button onClick={() => this.addBookmark()}>Add</button>
+      </Dropdown>
     </div>;
   }
 }

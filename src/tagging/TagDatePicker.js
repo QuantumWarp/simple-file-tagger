@@ -45,7 +45,6 @@ class TagDatePicker extends React.Component {
       return;
     }
 
-    // console.log(value)
     const valueSplit = value.split('-');
     this.setState({
       date: value + (valueSplit[1] ? '' : '-01') + (valueSplit[2] ? '' : '-01'),
@@ -89,6 +88,7 @@ class TagDatePicker extends React.Component {
   render() {
     return <div className="Tag-date-picker">
       <div>
+        <label>Date</label>
         <input
           type="date"
           value={this.state.date}
@@ -96,27 +96,36 @@ class TagDatePicker extends React.Component {
         />
       </div>
 
-      <div>
-        <label>Day</label>
-        <input
-          type="checkbox"
-          checked={this.state.day}
-          onChange={(event) => this.setState({ day: event.target.checked })}
-        />
-
-        <label>Month</label>
-        <input
-          type="checkbox"
-          checked={this.state.month}
-          onChange={(event) => this.setState({ month: event.target.checked })}
-        />
-
-        <label>Year</label>
-        <input
-          type="checkbox"
-          checked={this.state.year}
-          onChange={(event) => this.setState({ year: event.target.checked })}
-        />
+      <div className="Parts">
+        <label className="checkbox">
+          Day
+          <input
+            type="checkbox"
+            checked={this.state.day}
+            onChange={(event) => this.setState({ day: event.target.checked })}
+          />
+          <div className="box"></div>
+        </label>
+        
+        <label className="checkbox">
+          Month
+          <input
+            type="checkbox"
+            checked={this.state.month}
+            onChange={(event) => this.setState({ month: event.target.checked })}
+          />
+          <div className="box"></div>
+        </label>
+      
+        <label className="checkbox">
+          Year
+          <input
+            type="checkbox"
+            checked={this.state.year}
+            onChange={(event) => this.setState({ year: event.target.checked })}
+          />
+          <div className="box"></div>
+        </label>
       </div>
     </div>;
   }

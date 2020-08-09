@@ -41,25 +41,38 @@ class TagContainer extends React.Component {
 
   render() {
     return <div className="Tag-container">
-      <input
-        value={this.state.name}
-        onChange={(event) => this.setState({ name: event.target.value })}
-      />
+      {!this.props.filename && <div className="Message">No file selected</div>}
+      {this.props.filename && <>
+        <div className="Tag-file-info">
+          <div className="Name">
+            <label>Name</label>
+            <input
+              type="text"
+              value={this.state.name}
+              onChange={(event) => this.setState({ name: event.target.value })}
+            />
+          </div>
 
-      <input
-        value={this.state.extension}
-        onChange={(event) => this.setState({ extension: event.target.value })}
-      />
+          <div className="Extension">
+            <label>Extension</label>
+            <input
+              type="text"
+              value={this.state.extension}
+              onChange={(event) => this.setState({ extension: event.target.value })}
+            />
+          </div>
+        </div>
 
-      <TagDatePicker
-        value={this.state.dateTag}
-        onChange={(dateTag) => this.setState({ dateTag })}
-      />
+        <TagDatePicker
+          value={this.state.dateTag}
+          onChange={(dateTag) => this.setState({ dateTag })}
+        />
 
-      <TagList
-        tags={this.state.tags}
-        onTagsChange={(tags) => this.setState({ tags })}
-      />
+        <TagList
+          tags={this.state.tags}
+          onTagsChange={(tags) => this.setState({ tags })}
+        />
+      </>}
     </div>;
   }
 }

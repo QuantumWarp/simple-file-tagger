@@ -7,17 +7,18 @@ const fs = electron.remote.require('fs');
 class FileDetail extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { imageData: null };
+    this.state = { imageData: null, imageDataError: false };
   }
 
   componentDidUpdate(prevProps) {
     if (prevProps.path !== this.props.path || prevProps.filename !== this.props.filename) {
       if (!this.props.filename || !FileHelper.isImage(this.props.filename)) {
-        this.setState({ imageData: null });
+        this.setState({ imageData: null, imageDataError: false });
       } else {
         fs.readFile(this.props.path + '/' + this.props.filename, (err, data) => {
           this.setState({
-            imageData: `data:image/${FileHelper.getExtension(this.props.filename)};base64,${data.toString('base64')}`
+            imageData: `data:image/${FileHelper.getExtension(this.props.filename)};base64,${data.toString('base64')}`,
+            imageDataError: false,
           });
         })
       }
@@ -26,10 +27,10 @@ class FileDetail extends React.Component {
 
   render() {
     return <div className="File-detail">
-      <div>File Detail</div>
-      {!this.props.filename && <div>No file selected</div>}
-      {this.state.imageData && <img src={this.state.imageData} alt="Preview Failed" />}
-      {!this.state.imageData && this.props.filename && <div>No preview available</div>}
+      {!this.props.filename && <div className="Message">No file selected</div>}
+      {!this.state.imageData && this.props.filename && <div className="Message">No preview available</div>}
+      {this.state.imageData && this.state.imageDataError && <div className="Message">Preview failed</div>}
+      {this.state.imageData && !this.state.imageDataError && <img src={this.state.imageData} onError={() => this.setState({ imageDataError: true })} alt="" />}
     </div>;
   }
 }

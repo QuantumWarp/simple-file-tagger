@@ -11,3 +11,91 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+label {
+  font-size: calc(10px + 1vmin);
+}
+
+button {
+  background: none;
+	color: inherit;
+	border: none;
+	padding: 0;
+	font: inherit;
+	cursor: pointer;
+	outline: inherit;
+}
+
+button.clicky {
+  font-size: calc(10px + 1vmin);
+  background-color: white; 
+  color: black; 
+  border: 2px solid #008CBA;
+}
+button.clicky:hover {
+  background-color: #008CBA;
+  color: white;
+}
+
+input[type=text], input[type=date] {
+  width: 100%;
+  padding: calc(5px + 0.6vmin) calc(5px + 1vmin);
+  font-size: calc(10px + 1vmin);
+  margin: 8px 0;
+  display: inline-block;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+
+.checkbox {
+  display: block;
+  position: relative;
+  padding-left: 35px;
+  margin-bottom: 12px;
+  cursor: pointer;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+.checkbox > input[type=checkbox] {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+  height: 0;
+  width: 0;
+}
+.checkbox > .box {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 25px;
+  width: 25px;
+  background-color: #eee;
+}
+.checkbox:hover > .box {
+  background-color: #ccc;
+}
+.checkbox > input:checked ~ .box {
+  background-color: #2196F3;
+}
+.checkbox > .box:after {
+  content: "";
+  position: absolute;
+  display: none;
+}
+.checkbox > input:checked ~ .box:after {
+  display: block;
+}
+.checkbox > .box:after {
+  left: 9px;
+  top: 5px;
+  width: 5px;
+  height: 10px;
+  border: solid white;
+  border-width: 0 3px 3px 0;
+  -webkit-transform: rotate(45deg);
+  -ms-transform: rotate(45deg);
+  transform: rotate(45deg);
+}

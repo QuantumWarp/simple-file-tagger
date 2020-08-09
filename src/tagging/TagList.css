@@ -1,0 +1,25 @@
+.Tag-add {
+  display: flex;
+  margin-bottom: 10px;
+}
+.Tag-add > input {
+  flex: 3;
+}
+.Tag-add > button {
+  flex: 1;
+  margin-left: 20px;
+}
+
+.Tag {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  margin: 0px 30px;
+}
+.Tag > .checkbox {
+  flex: 1;
+}
+
+.List {
+  overflow-y: scroll;
+}

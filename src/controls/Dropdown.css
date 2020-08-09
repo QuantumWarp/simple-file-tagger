@@ -1,0 +1,17 @@
+.Dropdown {
+  position: absolute;
+  max-height: 0px;
+  overflow: hidden;
+  transition: max-height 0.5s ease-out;
+}
+.Dropdown.open {
+  max-height: 200px;
+}
+.Dropdown-inner {
+  border: 1px solid black;
+  background-color: #282c34;
+  cursor: pointer;
+}
+.Dropdown-item:hover {
+  background-color: #4d5157;
+}

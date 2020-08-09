@@ -1,7 +1,6 @@
 import React from 'react';
 import './App.css';
 import BookmarkHeader from './header/BookmarkHeader';
-import DiskHeader from './header/DiskHeader';
 import PathHeader from './header/PathHeader';
 import FileDetail from './file-detail/FileDetail';
 import FileList from './file-explorer/FileList';
@@ -37,11 +36,13 @@ class App extends React.Component {
   }
 
   setLocation(fullPath) {
-    if (!this.state.disks.find((x) => fullPath.startsWith(x))) {
-      fullPath = pathUtil.resolve(fullPath);
+    let stats = null;
+    if (this.state.disks.find((x) => fullPath === x)) {
+      stats = fs.lstatSync(fullPath + '/');
+    } else {
+      fullPath = pathUtil.resolve(fullPath).substring(1);
+      stats = fs.lstatSync(fullPath);
     }
-    console.log(fullPath)
-    const stats = fs.lstatSync(fullPath);
     if (stats.isDirectory()) {
       this.setState({ path: fullPath, filename: null });
     } else {
@@ -82,40 +83,45 @@ class App extends React.Component {
 
   render() {
     return <div className="App">
-      <div>
-        <DiskHeader
-          path={this.state.path}
-          disks={this.state.disks}
-          onPathChange={(event) => this.setLocation(event)}
-        />
+      <header>
         <BookmarkHeader
           path={this.state.path}
           onPathChange={(event) => this.setLocation(event)}
         />
         <PathHeader
           path={this.state.path}
+          disks={this.state.disks}
           onPathChange={(event) => this.setLocation(event)}
         />
-      </div>
+      </header>
 
       <main>
-        <FileList
-          path={this.state.path}
-          filename={this.state.filename}
-          files={this.state.files}
-          onLocationSelected={(fullPath) => this.setLocation(fullPath)}
-        />
+        <article>
+          <div>File Explorer</div>
+          <FileList
+            path={this.state.path}
+            filename={this.state.filename}
+            files={this.state.files}
+            onLocationSelected={(fullPath) => this.setLocation(fullPath)}
+          />
+        </article>
 
-        <TagContainer
-          path={this.state.path}
-          filename={this.state.filename}
-          onFilenameChange={(newFilename) => this.updateFilename(newFilename)}
-        />
+        <article>
+          <div>Tagging</div>
+          <TagContainer
+            path={this.state.path}
+            filename={this.state.filename}
+            onFilenameChange={(newFilename) => this.updateFilename(newFilename)}
+          />
+        </article>
 
-        <FileDetail
-          path={this.state.path}
-          filename={this.state.filename}
-        />
+        <article>
+          <div>File Preview</div>
+          <FileDetail
+            path={this.state.path}
+            filename={this.state.filename}
+          />
+        </article>
       </main>
     </div>;
   }

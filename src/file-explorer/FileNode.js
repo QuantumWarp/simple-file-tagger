@@ -16,7 +16,7 @@ class FileNode extends React.Component {
 
   render() {
     return <div
-      className="File-node"
+      className={`File-node ${this.props.selected ? 'Selected' : ''}`}
       onClick={this.props.onClick}
     >
       <span className="icon">
@@ -28,7 +28,6 @@ class FileNode extends React.Component {
       </span>
 
       <span>{this.props.nodeData.name}</span>
-      {this.props.selected && <span> (Selected)</span>}
     </div>;
   }
 }
