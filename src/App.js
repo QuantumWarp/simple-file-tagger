@@ -5,6 +5,7 @@ import PathHeader from './header/PathHeader';
 import FileDetail from './file-detail/FileDetail';
 import FileList from './file-explorer/FileList';
 import TagContainer from './tagging/TagContainer';
+import Notification from './controls/Notification';
 import pathUtil from 'path';
 
 const electron = window.require('electron');
@@ -83,6 +84,7 @@ class App extends React.Component {
 
   render() {
     return <div className="App">
+      <Notification></Notification>
       <header>
         <BookmarkHeader
           path={this.state.path}

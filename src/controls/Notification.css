@@ -1,0 +1,43 @@
+.Notification {
+  position: fixed;
+  right: 0;
+  top: 10px;
+}
+
+.Item {
+  margin: 10px 20px;
+  max-width: calc(100px + 15vmin);
+  min-width: calc(100px + 15vmin);
+  min-height: calc(20px + 3vmin);
+  padding: 5px 10px;
+  border-radius: 5px;
+  opacity: 0.9;
+  box-shadow: 0 0 12px #333;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+}
+
+.Item:hover {
+  box-shadow: 0 0 12px #000;
+  opacity: 1;
+}
+.Item > span {
+  font-size: calc(10px + 1vmin);
+}
+.Item > .Icon {
+  font-size: calc(10px + 1.5vmin);
+  margin-right: 2px;
+}
+.Item.Success {
+  background-color: #51a351;
+}
+.Item.Info {
+  background-color: #2f96b4;
+}
+.Item.Warning {
+  background-color: #f89406;
+}
+.Item.Error {
+  background-color: #bd362f;
+}
