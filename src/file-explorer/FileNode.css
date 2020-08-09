@@ -13,9 +13,15 @@
   background-color: grey;
 }
 
-.icon {
-  width: calc(10px + 2vmin);
+.Icon {
+  min-width: calc(10px + 2vmin);
   display: flex;
   flex-direction: row;
   align-items: center;
+}
+
+.File-node > span {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }

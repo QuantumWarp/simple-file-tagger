@@ -19,7 +19,7 @@ class FileNode extends React.Component {
       className={`File-node ${this.props.selected ? 'Selected' : ''}`}
       onClick={this.props.onClick}
     >
-      <span className="icon">
+      <span className="Icon">
         {!this.symbol && <FaQuestion />}
         {this.symbol === 'file' && <FaFile />}
         {this.symbol === 'image' && <FaImage />}

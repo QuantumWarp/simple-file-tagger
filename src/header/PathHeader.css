@@ -1,7 +1,13 @@
 .Path-header {
   cursor: pointer;
+  display: flex;
+  margin-left: 10px;
+  overflow: auto;
 }
 
+.Segment {
+  white-space: nowrap;
+}
 .Segment:hover {
   background-color: grey;
 }

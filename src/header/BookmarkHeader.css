@@ -1,0 +1,6 @@
+.Bookmark-header {
+  display: flex;
+}
+.Bookmark-header > :first-child {
+  margin: 0px 10px;
+}
