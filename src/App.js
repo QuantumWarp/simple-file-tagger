@@ -1,4 +1,5 @@
 import React from 'react';
+import pathUtil from 'path';
 import './App.css';
 import TitleBar from './header/TitleBar';
 import BookmarkHeader from './header/BookmarkHeader';
@@ -7,7 +8,6 @@ import FileDetail from './file-detail/FileDetail';
 import FileList from './file-explorer/FileList';
 import TagContainer from './tagging/TagContainer';
 import Notification from './controls/Notification';
-import pathUtil from 'path';
 import NotificationHelper from './helper/notification-helper';
 
 const electron = window.require('electron');
@@ -28,10 +28,12 @@ class App extends React.Component {
 
   async componentDidMount() {
     electron.ipcRenderer.on('loadFilesResponse', (event, files) => {
-      if (this.state.path.split('/').filter((x) => Boolean(x)).length > 1) {
-        files = [{ name: '..', isUp: true }].concat(files);
+      const { path } = this.state;
+      let newFiles = [...files];
+      if (path.split('/').filter((x) => Boolean(x)).length > 1) {
+        newFiles = [{ name: '..', isUp: true }].concat(files);
       }
-      this.setState({ files });
+      this.setState({ files: newFiles });
     });
 
     const path = localStorage.getItem('path');
@@ -42,14 +44,17 @@ class App extends React.Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
-    if (this.state.path !== prevState.path) {
-      localStorage.setItem('path', this.state.path);
-      electron.ipcRenderer.send('loadFiles', this.state.path + '/');
+    const { path } = this.state;
+    if (path !== prevState.path) {
+      localStorage.setItem('path', path);
+      electron.ipcRenderer.send('loadFiles', `${path}/`);
     }
   }
 
-  setLocation(fullPath) {
-    const isDiskPath = this.state.disks.find((x) => fullPath === x);
+  setLocation(newFullPath) {
+    let fullPath = newFullPath;
+    const { disks } = this.state;
+    const isDiskPath = disks.find((x) => fullPath === x);
     const statPath = fullPath + (isDiskPath ? '/' : '');
     fullPath = isDiskPath ? fullPath : pathUtil.resolve(fullPath).substring(1);
 
@@ -70,77 +75,85 @@ class App extends React.Component {
   }
 
   async loadDisks() {
+    const { path } = this.state;
     const disks = await nodeDiskInfo.getDiskInfo();
     this.setState({
       disks: disks.map((x) => x.mounted),
-      path: this.state.path ? this.state.path : disks[0].mounted,
+      path: path || disks[0].mounted,
     });
   }
 
   updateFilename(newFilename) {
-    const files = [...this.state.files];
-    const file = this.state.files.find((x) => x.name === this.state.filename);
-    const index = files.indexOf(file);
+    const { files, path, filename } = this.state;
+    const newFiles = [...files];
+    const file = files.find((x) => x.name === filename);
+    const index = newFiles.indexOf(file);
     const newFile = { ...file, name: newFilename };
-    files[index] = newFile;
+    newFiles[index] = newFile;
 
     fs.rename(
-      `${this.state.path}/${this.state.filename}`,
-      `${this.state.path}/${newFilename}`,
+      `${path}/${filename}`,
+      `${path}/${newFilename}`,
       () => {
-        this.setState({ files, filename: newFilename })
-        NotificationHelper.notify({ key: `${index}-${this.state.path}`, type: 'Success', message: 'Filename updated' })
+        this.setState({ files: newFiles, filename: newFilename });
+        NotificationHelper.notify({ key: `${index}-${path}`, type: 'Success', message: 'Filename updated' });
       },
     );
   }
 
   render() {
-    return <div className="App">
-      <Notification></Notification>
+    const {
+      disks, files, path, filename,
+    } = this.state;
 
-      <TitleBar></TitleBar>
+    return (
+      <div className="App">
+        <Notification />
 
-      <header>
-        <BookmarkHeader
-          path={this.state.path}
-          onPathChange={(event) => this.setLocation(event)}
-        />
-        <PathHeader
-          path={this.state.path}
-          disks={this.state.disks}
-          onPathChange={(event) => this.setLocation(event)}
-        />
-      </header>
+        <TitleBar />
 
-      <main>
-        <article>
-          <div>File Explorer</div>
-          <FileList
-            path={this.state.path}
-            filename={this.state.filename}
-            files={this.state.files}
-            onLocationSelected={(fullPath) => this.setLocation(fullPath)}
+        <header>
+          <BookmarkHeader
+            path={path}
+            onPathChange={(event) => this.setLocation(event)}
           />
-        </article>
-
-        <article>
-          <div>Tagging</div>
-          <TagContainer
-            path={this.state.path}
-            filename={this.state.filename}
-            onFilenameChange={(newFilename) => this.updateFilename(newFilename)}
+          <PathHeader
+            path={path}
+            disks={disks}
+            onPathChange={(event) => this.setLocation(event)}
           />
-        </article>
+        </header>
 
-        <article>
-          <div>File Preview</div>
-          <FileDetail
-            path={this.state.path}
-            filename={this.state.filename}
-          />
-        </article>
-      </main>
-    </div>;
+        <main>
+          <article>
+            <div>File Explorer</div>
+            <FileList
+              path={path}
+              filename={filename}
+              files={files}
+              onLocationSelected={(fullPath) => this.setLocation(fullPath)}
+            />
+          </article>
+
+          <article>
+            <div>Tagging</div>
+            <TagContainer
+              path={path}
+              filename={filename}
+              onFilenameChange={(newFilename) => this.updateFilename(newFilename)}
+            />
+          </article>
+
+          <article>
+            <div>File Preview</div>
+            <FileDetail
+              path={path}
+              filename={filename}
+            />
+          </article>
+        </main>
+      </div>
+    );
   }
 }
 

@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import './TagList.css';
 import { FaTrash } from 'react-icons/fa';
 
@@ -19,75 +20,113 @@ class TagList extends React.Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
-    if (this.state.tagOptions.length !== prevState.tagOptions.length) {
-      localStorage.setItem('tagOptions', JSON.stringify(this.state.tagOptions));
+    const { tags } = this.props;
+    const { tagOptions } = this.state;
+    if (tagOptions.length !== prevState.tagOptions.length) {
+      localStorage.setItem('tagOptions', JSON.stringify(tagOptions));
     }
 
-    const newTagOptions = this.state.tagOptions
-      .concat(this.props.tags)
+    const newTagOptions = tagOptions
+      .concat(tags)
       .filter((x, index, self) => self.indexOf(x) === index);
-    if (newTagOptions.length !== this.state.tagOptions.length) {
+    if (newTagOptions.length !== tagOptions.length) {
+      // eslint-disable-next-line react/no-did-update-set-state
       this.setState({ tagOptions: newTagOptions });
     }
   }
 
   addTag() {
-    if (!this.state.tagOptions.includes(this.state.newTagInput)) {
-      const newTagOptions = this.state.tagOptions.concat([this.state.newTagInput]);
+    const { tagOptions, newTagInput } = this.state;
+    if (!tagOptions.includes(newTagInput)) {
+      const newTagOptions = tagOptions.concat([newTagInput]);
       this.setState({ tagOptions: newTagOptions });
-      this.updateTagChecked(this.state.newTagInput, true);
+      this.updateTagChecked(newTagInput, true);
     }
 
     this.setState({ newTagInput: '' });
   }
 
   removeTag(tag) {
+    const { tagOptions } = this.state;
     this.updateTagChecked(tag, false);
-    const newTagOptions = this.state.tagOptions.filter((x) => x !== tag);
+    const newTagOptions = tagOptions.filter((x) => x !== tag);
     this.setState({ tagOptions: newTagOptions });
   }
 
   updateTagChecked(tag, checked) {
-    if (checked && !this.props.tags.includes(tag)) {
-      const newTags = this.props.tags.concat([tag]);
-      this.props.onTagsChange(newTags);
+    const { tags, onTagsChange } = this.props;
+    if (checked && !tags.includes(tag)) {
+      const newTags = tags.concat([tag]);
+      onTagsChange(newTags);
     } else {
-      const newTags = this.props.tags.filter((x) => x !== tag);
-      this.props.onTagsChange(newTags);
+      const newTags = tags.filter((x) => x !== tag);
+      onTagsChange(newTags);
     }
   }
 
   render() {
-    return <div className="Tag-list"> 
-      <label>Tag List</label>
-      <div className="Tag-add">
-        <input
-          type="text"
-          value={this.state.newTagInput}
-          onChange={(event) => this.setState({ newTagInput: event.target.value })}
-        />
-        <button className="clicky" onClick={() => this.addTag()}>Add Tag</button>
-      </div>
+    const { tags } = this.props;
+    const { tagOptions, newTagInput } = this.state;
+    return (
+      <div className="Tag-list">
+        <span className="Label">Tag List</span>
+        <div className="Tag-add">
+          <input
+            type="text"
+            value={newTagInput}
+            onChange={(event) => this.setState({ newTagInput: event.target.value })}
+          />
+          <button
+            type="button"
+            className="clicky"
+            onClick={() => this.addTag()}
+          >
+            Add Tag
+          </button>
+        </div>
 
-      <div className="List">
-        {this.state.tagOptions.sort().map((x) => <div
-          className="Tag"
-          key={x}
-        >
-          <label className="checkbox">
-            {x}
-            <input
-              type="checkbox"
-              checked={this.props.tags.includes(x)}
-              onChange={(event) => this.updateTagChecked(x, event.target.value)}
-            />
-            <div className="box"></div>
-          </label>
-          <button><FaTrash onClick={() => this.removeTag(x)}>Remove</FaTrash></button>
-        </div>)}
+        <div className="List">
+          {tagOptions.sort().map((x) => (
+            <div
+              className="Tag"
+              key={x}
+            >
+              <label
+                htmlFor={`tag-${x}`}
+                className="checkbox"
+              >
+                {x}
+                <input
+                  id={`tag-${x}`}
+                  type="checkbox"
+                  checked={tags.includes(x)}
+                  onChange={(event) => this.updateTagChecked(x, event.target.value)}
+                />
+                <div className="box" />
+              </label>
+
+              <button
+                type="button"
+                title="Remove"
+                onClick={() => this.removeTag(x)}
+              >
+                <FaTrash />
+              </button>
+            </div>
+          ))}
+        </div>
       </div>
-    </div>;
+    );
   }
 }
+
+TagList.propTypes = {
+  tags: PropTypes.arrayOf(PropTypes.string),
+  onTagsChange: PropTypes.func.isRequired,
+};
+
+TagList.defaultProps = {
+  tags: [],
+};
 
 export default TagList;

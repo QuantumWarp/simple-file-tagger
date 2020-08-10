@@ -18,6 +18,8 @@
     "cross-env": "^7.0.2",
     "electron": "^9.1.1",
     "electron-builder": "^22.8.0",
+    "eslint-config-airbnb": "^18.2.0",
+    "eslint-plugin-jsx-a11y": "^6.3.1",
     "wait-on": "^5.1.0"
   },
   "scripts": {
@@ -30,7 +32,17 @@
     "postinstall": "electron-builder install-app-deps"
   },
   "eslintConfig": {
-    "extends": "react-app"
+    "extends": [
+      "react-app",
+      "airbnb",
+      "plugin:jsx-a11y/recommended"
+    ],
+    "plugins": [
+      "jsx-a11y"
+    ],
+    "rules": {
+      "react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx"] }]
+    }
   },
   "browserslist": {
     "production": [

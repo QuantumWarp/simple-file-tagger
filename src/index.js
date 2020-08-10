@@ -8,7 +8,7 @@ ReactDOM.render(
   <React.StrictMode>
     <ErrorBoundary>
       <App />
-    </ErrorBoundary>    
+    </ErrorBoundary>
   </React.StrictMode>,
-  document.getElementById('root')
+  document.getElementById('root'),
 );

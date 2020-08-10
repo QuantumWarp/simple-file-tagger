@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import './PathHeader.css';
 import Dropdown from '../controls/Dropdown';
 
@@ -9,7 +10,8 @@ class PathHeader extends React.Component {
   }
 
   get driveSegment() {
-    return this.props.disks.find((x) => x === this.segments[0]);
+    const { disks } = this.props;
+    return disks.find((x) => x === this.segments[0]);
   }
 
   get otherSegments() {
@@ -17,47 +19,77 @@ class PathHeader extends React.Component {
   }
 
   get segments() {
-    return this.props.path.split('/').filter((x) => Boolean(x));
+    const { path } = this.props;
+    return path.split('/').filter((x) => Boolean(x));
   }
 
   segmentSelected(index) {
+    const { onPathChange } = this.props;
     const joined = this.segments.slice(0, index + 2).join('/');
-    this.props.onPathChange(`${joined}`);
+    onPathChange(`${joined}`);
   }
 
   render() {
-    return <div className="Path-header">
-      <Dropdown
-        open={this.state.dropdownOpen}
-        onClose={() => this.setState({ dropdownOpen: false })}
-      >
-        {this.props.disks.map((x) =>
-          <Dropdown.Item
-            key={x}
-            onClick={() => this.props.onPathChange(`${x}/`)}
-          ><span className="Path-header-disk">{x}</span></Dropdown.Item>
-        )}
-      </Dropdown>
-
-      <div className="Path-header-inner">
-        {this.driveSegment && 
-          <button onClick={() => this.setState({ dropdownOpen: !this.state.dropdownOpen })}>
-            <span className="Segment" title="Change Drive">{this.driveSegment}</span>/
-          </button>
-        }
-
-        {this.otherSegments.map((x, index) =>
-          <span key={`${x}/${index}`}>
-            <span
-              className="Segment"
-              onClick={() => this.segmentSelected(index)}
+    const { disks, onPathChange } = this.props;
+    const { dropdownOpen } = this.state;
+    return (
+      <div className="Path-header">
+        <Dropdown
+          open={dropdownOpen}
+          onClose={() => this.setState({ dropdownOpen: false })}
+        >
+          {disks.map((x) => (
+            <Dropdown.Item
+              key={x}
+              onClick={() => onPathChange(`${x}/`)}
             >
-              {x}
-            </span>/
-          </span>)}
+              <span className="Path-header-disk">{x}</span>
+            </Dropdown.Item>
+          ))}
+        </Dropdown>
+
+        <div className="Path-header-inner">
+          {this.driveSegment && (
+            <button
+              type="button"
+              onClick={() => this.setState({ dropdownOpen: !dropdownOpen })}
+            >
+              <span className="Segment" title="Change Drive">{this.driveSegment}</span>
+              /
+            </button>
+          )}
+
+          {this.otherSegments.map((x, index) => (
+            <span
+              className="Segment-container"
+              // eslint-disable-next-line react/no-array-index-key
+              key={`${x}/${index}`}
+            >
+              <button
+                type="button"
+                className="Segment"
+                onClick={() => this.segmentSelected(index)}
+              >
+                {x}
+              </button>
+              /
+            </span>
+          ))}
+        </div>
       </div>
-    </div>;
+    );
   }
 }
+
+PathHeader.propTypes = {
+  disks: PropTypes.arrayOf(PropTypes.string),
+  path: PropTypes.string,
+  onPathChange: PropTypes.func.isRequired,
+};
+
+PathHeader.defaultProps = {
+  disks: [],
+  path: '',
+};
 
 export default PathHeader;

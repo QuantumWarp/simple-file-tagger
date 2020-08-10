@@ -12,9 +12,10 @@ module.exports = {
             name: x.name,
             isDirectory: x.isDirectory(),
             isFile: x.isFile(),
-          }))
+          }));
           event.sender.send('loadFilesResponse', result);
-        });
-    })
-  }
+        },
+      );
+    });
+  },
 };

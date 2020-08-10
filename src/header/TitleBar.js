@@ -1,9 +1,11 @@
 import React from 'react';
 import './TitleBar.css';
-import { FaRegWindowMinimize, FaRegWindowMaximize, FaRegWindowRestore, FaRegWindowClose } from 'react-icons/fa';
+import {
+  FaRegWindowMinimize, FaRegWindowMaximize, FaRegWindowRestore, FaRegWindowClose,
+} from 'react-icons/fa';
 
 const electron = window.require('electron');
-const BrowserWindow = electron.remote.BrowserWindow;
+const { BrowserWindow } = electron.remote;
 
 class TitleBar extends React.Component {
   constructor(props) {
@@ -19,27 +21,30 @@ class TitleBar extends React.Component {
   }
 
   render() {
-    return <div className="Title-bar">
-      <div className="Title">File Tagger</div>
-      <div className="Title-buttons">
-        <button onClick={() => BrowserWindow.getFocusedWindow().minimize()}>
-          <FaRegWindowMinimize></FaRegWindowMinimize>
-        </button>
-        {!this.state.maximized &&
-          <button onClick={() => BrowserWindow.getFocusedWindow().maximize()}>
-            <FaRegWindowMaximize></FaRegWindowMaximize>
+    const { maximized } = this.state;
+    return (
+      <div className="Title-bar">
+        <div className="Title">File Tagger</div>
+        <div className="Title-buttons">
+          <button type="button" onClick={() => BrowserWindow.getFocusedWindow().minimize()}>
+            <FaRegWindowMinimize />
           </button>
-        }
-        {this.state.maximized &&
-          <button onClick={() => BrowserWindow.getFocusedWindow().restore()}>
-            <FaRegWindowRestore></FaRegWindowRestore>
+          {!maximized && (
+            <button type="button" onClick={() => BrowserWindow.getFocusedWindow().maximize()}>
+              <FaRegWindowMaximize />
+            </button>
+          )}
+          {maximized && (
+            <button type="button" onClick={() => BrowserWindow.getFocusedWindow().restore()}>
+              <FaRegWindowRestore />
+            </button>
+          )}
+          <button type="button" onClick={() => BrowserWindow.getFocusedWindow().close()}>
+            <FaRegWindowClose />
           </button>
-        }
-        <button onClick={() => BrowserWindow.getFocusedWindow().close()}>
-          <FaRegWindowClose></FaRegWindowClose>
-        </button>
+        </div>
       </div>
-    </div>;
+    );
   }
 }
 

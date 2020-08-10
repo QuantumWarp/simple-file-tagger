@@ -1,4 +1,4 @@
-class FileHelper {  
+class FileHelper {
   static getInfo(entry) {
     return {
       ...entry,
@@ -29,7 +29,7 @@ class FileHelper {
       extension = name.substring(lastDotIndex + 1);
       name = name.substring(0, lastDotIndex);
     }
-    
+
     const startTagIndex = name.indexOf('[');
     const lastTagIndex = name.lastIndexOf(']');
     if (startTagIndex !== -1 && lastTagIndex !== -1) {
@@ -39,14 +39,18 @@ class FileHelper {
       name = name.substring(0, startTagIndex).trimEnd();
     }
 
-    return { name, tags, dateTag, extension };
+    return {
+      name, tags, dateTag, extension,
+    };
   }
 
   static isDateTag(tag) {
     return tag.match(/^\d\d\d\d(-\d\d)?(-\d\d)?$/);
   }
 
-  static createFilename({ name, tags, dateTag, extension }) {
+  static createFilename({
+    name, tags, dateTag, extension,
+  }) {
     const sortedTags = tags.sort();
     const combinedTags = dateTag ? [dateTag].concat(sortedTags) : sortedTags;
     let filename = name;

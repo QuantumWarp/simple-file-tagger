@@ -1,15 +1,27 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import './Dropdown.css';
 
-class DropdownItem extends React.Component {
-  render() {
-    return <div
+const DropdownItem = (props) => {
+  const { children, onClick } = props;
+  return (
+    <button
+      type="button"
       className="Dropdown-item"
-      onClick={this.props.onClick}
+      onClick={onClick}
     >
-      {this.props.children}
-    </div>;
-  }
-}
+      {children}
+    </button>
+  );
+};
+
+DropdownItem.propTypes = {
+  children: PropTypes.node.isRequired,
+  onClick: PropTypes.func,
+};
+
+DropdownItem.defaultProps = {
+  onClick: () => {},
+};
 
 export default DropdownItem;

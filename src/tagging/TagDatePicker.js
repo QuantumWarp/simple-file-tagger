@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import './TagDatePicker.css';
 
 class TagDatePicker extends React.Component {
@@ -15,27 +16,31 @@ class TagDatePicker extends React.Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
-    if (this.props.value !== prevProps.value) {
-      this.parse(this.props.value);
+    const { value, onChange } = this.props;
+    if (value !== prevProps.value) {
+      this.parse(value);
       return;
     }
 
     const orderCorrected = this.correctOrdering(prevState);
     if (orderCorrected) return;
 
-    const updateDate = this.state.date
-      && (this.state.date !== prevState.date
-      || this.state.day !== prevState.day
-      || this.state.month !== prevState.month
-      || this.state.year !== prevState.year);
+    let {
+      date, day, month, year,
+    } = this.state;
+    const updateDate = date
+      && (date !== prevState.date
+      || day !== prevState.day
+      || month !== prevState.month
+      || year !== prevState.year);
 
     if (updateDate) {
-      const splitDate = this.state.date.split('-');
-      const year = this.state.year ? splitDate[0] : '';
-      const month = this.state.month ? `-${splitDate[1]}` : '';
-      const day = this.state.day ? `-${splitDate[2]}` : '';
-      const date = year + month + day;
-      this.props.onChange(date);
+      const splitDate = date.split('-');
+      year = year ? splitDate[0] : '';
+      month = month ? `-${splitDate[1]}` : '';
+      day = day ? `-${splitDate[2]}` : '';
+      date = year + month + day;
+      onChange(date);
     }
   }
 
@@ -53,82 +58,114 @@ class TagDatePicker extends React.Component {
       day: Boolean(valueSplit[2]),
     });
   }
-  
+
   correctOrdering(prevState) {
-    const isValidOrdering = this.state.year >= this.state.month && this.state.month >= this.state.day;
+    const { day, month, year } = this.state;
+    const isValidOrdering = year >= month && month >= day;
 
     if (isValidOrdering) return false;
 
-    const isChecking = this.state.year > prevState.year || this.state.month > prevState.month || this.state.day > prevState.day;
+    const isChecking = year > prevState.year || month > prevState.month || day > prevState.day;
 
     if (isChecking) {
       this.setState({
-        month: this.state.day || this.state.month,
-        year: this.state.day || this.state.month || this.state.year,
+        month: day || month,
+        year: day || month || year,
       });
     } else {
-      this.setState({ 
-        month: this.state.year && this.state.month,
-        day: this.state.year && this.state.month && this.state.day,
+      this.setState({
+        month: year && month,
+        day: year && month && day,
       });
     }
 
     return true;
   }
 
-  dateChanged(date) {
-    const hadDate = !this.state.date;
+  dateChanged(newDate) {
+    const { date } = this.state;
+    const hadDate = !date;
     if (hadDate) {
-      this.setState({ date, day: true, month: true, year: true });
+      this.setState({
+        date: newDate, day: true, month: true, year: true,
+      });
     } else {
       this.setState({ date });
     }
   }
 
   render() {
-    return <div className="Tag-date-picker">
-      <div>
-        <label>Date</label>
-        <input
-          type="date"
-          value={this.state.date}
-          onChange={(event) => this.dateChanged(event.target.value)}
-        />
-      </div>
+    const {
+      date, day, month, year,
+    } = this.state;
 
-      <div className="Parts">
-        <label className="checkbox">
-          Day
+    return (
+      <div className="Tag-date-picker">
+        <label htmlFor="date-tag">
+          Date
           <input
-            type="checkbox"
-            checked={this.state.day}
-            onChange={(event) => this.setState({ day: event.target.checked })}
+            id="date-tag"
+            type="date"
+            value={date}
+            onChange={(event) => this.dateChanged(event.target.value)}
           />
-          <div className="box"></div>
         </label>
-        
-        <label className="checkbox">
-          Month
-          <input
-            type="checkbox"
-            checked={this.state.month}
-            onChange={(event) => this.setState({ month: event.target.checked })}
-          />
-          <div className="box"></div>
-        </label>
-      
-        <label className="checkbox">
-          Year
-          <input
-            type="checkbox"
-            checked={this.state.year}
-            onChange={(event) => this.setState({ year: event.target.checked })}
-          />
-          <div className="box"></div>
-        </label>
+
+        <div className="Parts">
+          <label
+            htmlFor="tag-day"
+            className="checkbox"
+          >
+            Day
+            <input
+              id="tag-day"
+              type="checkbox"
+              checked={day}
+              onChange={(event) => this.setState({ day: event.target.checked })}
+            />
+            <div className="box" />
+          </label>
+
+          <label
+            htmlFor="tag-month"
+            className="checkbox"
+          >
+            Month
+            <input
+              id="tag-month"
+              type="checkbox"
+              checked={month}
+              onChange={(event) => this.setState({ month: event.target.checked })}
+            />
+            <div className="box" />
+          </label>
+
+          <label
+            htmlFor="tag-year"
+            className="checkbox"
+          >
+            Year
+            <input
+              id="tag-year"
+              type="checkbox"
+              checked={year}
+              onChange={(event) => this.setState({ year: event.target.checked })}
+            />
+            <div className="box" />
+          </label>
+        </div>
       </div>
-    </div>;
+    );
   }
 }
+
+TagDatePicker.propTypes = {
+  value: PropTypes.string,
+  onChange: PropTypes.func.isRequired,
+};
+
+TagDatePicker.defaultProps = {
+  value: '',
+};
 
 export default TagDatePicker;

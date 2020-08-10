@@ -1,6 +1,9 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import './BookmarkHeader.css';
-import { FaBookmark, FaTrash, FaRegStar, FaStar } from 'react-icons/fa';
+import {
+  FaBookmark, FaTrash, FaRegStar, FaStar,
+} from 'react-icons/fa';
 import Dropdown from '../controls/Dropdown';
 import NotificationHelper from '../helper/notification-helper';
 
@@ -13,10 +16,6 @@ class BookmarkHeader extends React.Component {
     };
   }
 
-  get currentBookmark() {
-    return this.state.bookmarks.find((x) => x.path === this.props.path);
-  }
-
   componentDidMount() {
     const bookmarks = localStorage.getItem('bookmarks');
     if (bookmarks) {
@@ -25,18 +24,27 @@ class BookmarkHeader extends React.Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
-    if (this.state.bookmarks.length !== prevState.bookmarks.length) {
-      localStorage.setItem('bookmarks', JSON.stringify(this.state.bookmarks));
+    const { bookmarks } = this.state;
+    if (bookmarks.length !== prevState.bookmarks.length) {
+      localStorage.setItem('bookmarks', JSON.stringify(bookmarks));
     }
   }
 
+  get currentBookmark() {
+    const { path } = this.props;
+    const { bookmarks } = this.state;
+    return bookmarks.find((x) => x.path === path);
+  }
+
   addBookmark() {
-    const pathSplit = this.props.path.split('/');
+    const { path } = this.props;
+    const { bookmarks } = this.state;
+    const pathSplit = path.split('/');
     const bookmark = {
       name: pathSplit[pathSplit.length - 1] || 'Root',
-      path: this.props.path,
+      path,
     };
-    const newBookmarks = this.state.bookmarks
+    const newBookmarks = bookmarks
       .filter((x) => x.path !== bookmark.path)
       .concat([bookmark]);
     this.setState({ bookmarks: newBookmarks });
@@ -44,52 +52,70 @@ class BookmarkHeader extends React.Component {
   }
 
   removeBookmark(path) {
-    const newBookmarks = this.state.bookmarks.filter((x) => x.path !== path);
+    const { bookmarks } = this.state;
+    const newBookmarks = bookmarks.filter((x) => x.path !== path);
     this.setState({ bookmarks: newBookmarks });
     NotificationHelper.notify({ type: 'Warning', message: 'Removed bookmark' });
   }
 
   render() {
-    return <div className="Bookmark-header">
-      {this.state.bookmarks.length !== 0 && 
-        <button
-          className="Bookmarks-button"
-          title="Bookmarks"
-          onClick={() => this.setState({ dropdownOpen: !this.state.dropdownOpen })}
-        >
-          <FaBookmark></FaBookmark>
-        </button>
-      }
-
-      <button title={this.currentBookmark ? 'Unfavourite' : 'Favourite'}>
-        {!this.currentBookmark && <FaRegStar onClick={() => this.addBookmark()}></FaRegStar>}
-        {this.currentBookmark && <FaStar onClick={() => this.removeBookmark(this.props.path)}></FaStar>}
-      </button>
-
-      <Dropdown
-        open={this.state.dropdownOpen}
-        onClose={() => this.setState({ dropdownOpen: false })}
-      >
-        {this.state.bookmarks.map((x) =>
-          <Dropdown.Item
-            key={x.path}
-            onClick={() => this.props.onPathChange(x.path)}
+    const { path, onPathChange } = this.props;
+    const { bookmarks, dropdownOpen } = this.state;
+    return (
+      <div className="Bookmark-header">
+        {bookmarks.length !== 0 && (
+          <button
+            type="button"
+            className="Bookmarks-button"
+            title="Bookmarks"
+            onClick={() => this.setState({ dropdownOpen: !dropdownOpen })}
           >
-            <div
-              className="Bookmark-item"
-              title={x.path}
-            >
-              <span>{x.name}</span>
-              <FaTrash
-                title="Remove bookmark"
-                onClick={(event) => { event.stopPropagation(); this.removeBookmark(x.path); }}>
-              </FaTrash>
-            </div>
-          </Dropdown.Item>
+            <FaBookmark />
+          </button>
         )}
-      </Dropdown>
-    </div>;
+
+        <button
+          type="button"
+          title={this.currentBookmark ? 'Unfavourite' : 'Favourite'}
+        >
+          {!this.currentBookmark && <FaRegStar onClick={() => this.addBookmark()} />}
+          {this.currentBookmark && <FaStar onClick={() => this.removeBookmark(path)} />}
+        </button>
+
+        <Dropdown
+          open={dropdownOpen}
+          onClose={() => this.setState({ dropdownOpen: false })}
+        >
+          {bookmarks.map((x) => (
+            <Dropdown.Item
+              key={x.path}
+              onClick={() => onPathChange(x.path)}
+            >
+              <div
+                className="Bookmark-item"
+                title={x.path}
+              >
+                <span>{x.name}</span>
+                <FaTrash
+                  title="Remove bookmark"
+                  onClick={(event) => { event.stopPropagation(); this.removeBookmark(x.path); }}
+                />
+              </div>
+            </Dropdown.Item>
+          ))}
+        </Dropdown>
+      </div>
+    );
   }
 }
+
+BookmarkHeader.propTypes = {
+  path: PropTypes.string,
+  onPathChange: PropTypes.func.isRequired,
+};
+
+BookmarkHeader.defaultProps = {
+  path: '',
+};
 
 export default BookmarkHeader;

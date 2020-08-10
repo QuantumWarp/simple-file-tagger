@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import './TagContainer.css';
 import TagDatePicker from './TagDatePicker';
 import TagList from './TagList';
@@ -16,65 +17,98 @@ class TagContainer extends React.Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
+    const { path, filename, onFilenameChange } = this.props;
+    const {
+      name, dateTag, tags, extension,
+    } = this.state;
+
     if (!this.intialUpdate
-      && (this.state.name !== prevState.name
-      || this.state.dateTag !== prevState.dateTag
-      || this.state.tags.length !== prevState.tags.length
-      || this.state.extension !== prevState.extension)
+      && (name !== prevState.name
+      || dateTag !== prevState.dateTag
+      || tags.length !== prevState.tags.length
+      || extension !== prevState.extension)
     ) {
       const newFilename = FileHelper.createFilename(this.state);
-      this.props.onFilenameChange(newFilename);
+      onFilenameChange(newFilename);
     }
 
     this.intialUpdate = false;
 
-    if (this.props.path !== prevProps.path
-      || this.props.filename !== prevProps.filename
+    if (path !== prevProps.path
+      || filename !== prevProps.filename
     ) {
-      if (this.props.filename) {
-        const parsedFile = FileHelper.parseFilename(this.props.filename);
+      if (filename) {
+        const parsedFile = FileHelper.parseFilename(filename);
         this.intialUpdate = true;
+        // eslint-disable-next-line react/no-did-update-set-state
         this.setState(parsedFile);
       }
     }
   }
 
   render() {
-    return <div className="Tag-container">
-      {!this.props.filename && <div className="Message">No file selected</div>}
-      {this.props.filename && <>
-        <div className="Tag-file-info">
-          <div className="Name">
-            <label>Name</label>
-            <input
-              type="text"
-              value={this.state.name}
-              onChange={(event) => this.setState({ name: event.target.value })}
+    const { filename } = this.props;
+    const {
+      name, dateTag, tags, extension,
+    } = this.state;
+    return (
+      <div className="Tag-container">
+        {!filename && <div className="Message">No file selected</div>}
+        {filename && (
+          <>
+            <div className="Tag-file-info">
+              <label
+                htmlFor="file-name"
+                className="Name"
+              >
+                Name
+                <input
+                  id="file-name"
+                  type="text"
+                  value={name}
+                  onChange={(event) => this.setState({ name: event.target.value })}
+                />
+              </label>
+
+              <label
+                htmlFor="file-extension"
+                className="Extension"
+              >
+                Extension
+                <input
+                  id="file-extension"
+                  type="text"
+                  value={extension}
+                  onChange={(event) => this.setState({ extension: event.target.value })}
+                />
+              </label>
+            </div>
+
+            <TagDatePicker
+              value={dateTag}
+              onChange={(dateTagUpdate) => this.setState({ dateTag: dateTagUpdate })}
             />
-          </div>
 
-          <div className="Extension">
-            <label>Extension</label>
-            <input
-              type="text"
-              value={this.state.extension}
-              onChange={(event) => this.setState({ extension: event.target.value })}
+            <TagList
+              tags={tags}
+              onTagsChange={(tagsUpdate) => this.setState({ tags: tagsUpdate })}
             />
-          </div>
-        </div>
-
-        <TagDatePicker
-          value={this.state.dateTag}
-          onChange={(dateTag) => this.setState({ dateTag })}
-        />
-
-        <TagList
-          tags={this.state.tags}
-          onTagsChange={(tags) => this.setState({ tags })}
-        />
-      </>}
-    </div>;
+          </>
+        )}
+      </div>
+    );
   }
 }
+
+TagContainer.propTypes = {
+  path: PropTypes.string,
+  filename: PropTypes.string,
+  onFilenameChange: PropTypes.func.isRequired,
+};
+
+TagContainer.defaultProps = {
+  path: '',
+  filename: '',
+};
 
 export default TagContainer;

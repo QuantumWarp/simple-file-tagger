@@ -1,11 +1,15 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import './FileNode.css';
-import { FaFolder, FaImage, FaFile, FaArrowUp, FaQuestion } from 'react-icons/fa';
+import {
+  FaFolder, FaImage, FaFile, FaArrowUp, FaQuestion,
+} from 'react-icons/fa';
 import FileHelper from '../helper/file-helper';
 
 class FileNode extends React.Component {
   get symbol() {
-    const info = FileHelper.getInfo(this.props.nodeData);
+    const { nodeData } = this.props;
+    const info = FileHelper.getInfo(nodeData);
     let symbol = null;
     symbol = (info.isFile && 'file') || symbol;
     symbol = (info.isImage && 'image') || symbol;
@@ -15,22 +19,37 @@ class FileNode extends React.Component {
   }
 
   render() {
-    return <div
-      className={`File-node ${this.props.selected ? 'Selected' : ''}`}
-      title={this.props.nodeData.name}
-      onClick={this.props.onClick}
-    >
-      <span className="Icon">
-        {!this.symbol && <FaQuestion />}
-        {this.symbol === 'file' && <FaFile />}
-        {this.symbol === 'image' && <FaImage />}
-        {this.symbol === 'directory' && <FaFolder />}
-        {this.symbol === 'up' && <FaArrowUp />}
-      </span>
+    const { nodeData, selected, onClick } = this.props;
+    return (
+      <button
+        type="button"
+        className={`File-node ${selected ? 'Selected' : ''}`}
+        title={nodeData.name}
+        onClick={onClick}
+      >
+        <span className="Icon">
+          {!this.symbol && <FaQuestion />}
+          {this.symbol === 'file' && <FaFile />}
+          {this.symbol === 'image' && <FaImage />}
+          {this.symbol === 'directory' && <FaFolder />}
+          {this.symbol === 'up' && <FaArrowUp />}
+        </span>
 
-      <span>{this.props.nodeData.name}</span>
-    </div>;
+        <span>{nodeData.name}</span>
+      </button>
+    );
   }
 }
+
+FileNode.propTypes = {
+  nodeData: PropTypes.shape().isRequired,
+  selected: PropTypes.bool,
+  onClick: PropTypes.func,
+};
+
+FileNode.defaultProps = {
+  selected: false,
+  onClick: () => {},
+};
 
 export default FileNode;

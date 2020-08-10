@@ -15,6 +15,10 @@
   padding: 0px 5px;
 }
 
+.Segment-container {
+  display: flex;
+  flex-direction: row;
+}
 .Segment {
   white-space: nowrap;
 }
