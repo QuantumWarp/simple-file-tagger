@@ -1,6 +1,7 @@
 .Dropdown {
   position: absolute;
   opacity: 0;
+  pointer-events: none;
   overflow: hidden;
   transition: opacity 0.2s ease-out;
   top: calc(100% + 2px);
@@ -9,6 +10,7 @@
 }
 .Dropdown.open {
   opacity: 1;
+  pointer-events: all;
 }
 .Dropdown-inner {
   border: 1px solid grey;

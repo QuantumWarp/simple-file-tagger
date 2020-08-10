@@ -18,21 +18,24 @@ class App extends React.Component {
     super();
 
     this.state = {
-      path: 'E:/Development/react/simple-file-tagger/test-files',
+      path: '',
       filename: null,
       files: [],
       disks: [],
     };
   }
 
-
   async componentDidMount() {
+    const path = localStorage.getItem('path');
+    if (path) {
+      this.setLocation(path);
+    }
     this.loadDisks();
-    this.loadFiles();
   }
 
   componentDidUpdate(prevProps, prevState) {
     if (this.state.path !== prevState.path) {
+      localStorage.setItem('path', this.state.path);
       this.loadFiles();
     }
   }
@@ -41,8 +44,8 @@ class App extends React.Component {
     const isDiskPath = this.state.disks.find((x) => fullPath === x);
     const statPath = fullPath + (isDiskPath ? '/' : '');
     fullPath = isDiskPath ? fullPath : pathUtil.resolve(fullPath).substring(1);
-    
-    fs.lstat(statPath, (err, stats) => {
+    console.log(statPath);
+    fs.lstat('E:/', (err, stats) => {
       if (err) {
         NotificationHelper.notify({ type: 'Error', message: 'Invalid file or path' });
         return;
@@ -61,17 +64,22 @@ class App extends React.Component {
 
   loadFiles() {
     fs.readdir(
-      this.state.path,
+      this.state.path + '/',
       { withFileTypes: true },
       (err, files) => {
-        files = [{ name: '..' }].concat(files);
+        if (this.state.path.split('/').filter((x) => Boolean(x)).length > 1) {
+          files = [{ name: '..' }].concat(files);
+        }
         this.setState({ files });
       });
   }
 
   async loadDisks() {
     const disks = await nodeDiskInfo.getDiskInfo();
-    this.setState({ disks: disks.map((x) => x.mounted) });
+    this.setState({
+      disks: disks.map((x) => x.mounted),
+      path: this.state.path ? this.state.path : disks[0].mounted,
+    });
   }
 
   updateFilename(newFilename) {
