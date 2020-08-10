@@ -5,6 +5,8 @@ import { MdWarning, MdError } from 'react-icons/md';
 import NotificationHelper from '../helper/notification-helper';
 
 class Notification extends React.Component {
+  count = 0;
+
   constructor(props) {
     super(props);
     this.state = { notifications: [] };
@@ -15,8 +17,13 @@ class Notification extends React.Component {
   }
 
   addNotification(notification) {
+    if (!notification.key) {
+      this.count = this.count + 1;
+      notification.key = this.count;
+    }
+
     if (!this.state.notifications.find((x) => x.key === notification.key)) {
-      setTimeout(() => this.clearNotification(notification), 5000);
+      setTimeout(() => this.clearNotification(notification), 3000);
       this.setState({ notifications: this.state.notifications.concat([notification]) });
     }
   }

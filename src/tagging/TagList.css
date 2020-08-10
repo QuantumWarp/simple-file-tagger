@@ -29,5 +29,5 @@
 .List {
   flex: 1 1 auto;
   height: 0px;
-  overflow-y: scroll;
+  overflow-y: auto;
 }

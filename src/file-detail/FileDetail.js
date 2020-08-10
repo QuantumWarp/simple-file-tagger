@@ -13,16 +13,24 @@ class FileDetail extends React.Component {
   componentDidUpdate(prevProps) {
     if (prevProps.path !== this.props.path || prevProps.filename !== this.props.filename) {
       if (!this.props.filename || !FileHelper.isImage(this.props.filename)) {
-        this.setState({ imageData: null, imageDataError: false });
+        this.clearImageData();
       } else {
         fs.readFile(this.props.path + '/' + this.props.filename, (err, data) => {
-          this.setState({
-            imageData: `data:image/${FileHelper.getExtension(this.props.filename)};base64,${data.toString('base64')}`,
-            imageDataError: false,
-          });
+          if (data) {
+            this.setState({
+              imageData: `data:image/${FileHelper.getExtension(this.props.filename)};base64,${data.toString('base64')}`,
+              imageDataError: false,
+            });
+          } else {
+            this.clearImageData();
+          }
         })
       }
     }
+  }
+
+  clearImageData() {
+    this.setState({ imageData: null, imageDataError: false });
   }
 
   render() {

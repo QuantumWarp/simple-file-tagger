@@ -7,6 +7,7 @@ import FileList from './file-explorer/FileList';
 import TagContainer from './tagging/TagContainer';
 import Notification from './controls/Notification';
 import pathUtil from 'path';
+import NotificationHelper from './helper/notification-helper';
 
 const electron = window.require('electron');
 const fs = electron.remote.require('fs');
@@ -37,20 +38,25 @@ class App extends React.Component {
   }
 
   setLocation(fullPath) {
-    let stats = null;
-    if (this.state.disks.find((x) => fullPath === x)) {
-      stats = fs.lstatSync(fullPath + '/');
-    } else {
-      fullPath = pathUtil.resolve(fullPath).substring(1);
-      stats = fs.lstatSync(fullPath);
-    }
-    if (stats.isDirectory()) {
-      this.setState({ path: fullPath, filename: null });
-    } else {
-      const filename = fullPath.split('/')[fullPath.split('/').length - 1];
-      const path = fullPath.substring(0, fullPath.length - filename.length - 1);
-      this.setState({ path, filename });
-    }
+    const isDiskPath = this.state.disks.find((x) => fullPath === x);
+    const statPath = fullPath + (isDiskPath ? '/' : '');
+    fullPath = isDiskPath ? fullPath : pathUtil.resolve(fullPath).substring(1);
+    
+    fs.lstat(statPath, (err, stats) => {
+      if (err) {
+        NotificationHelper.notify({ type: 'Error', message: 'Invalid file or path' });
+        return;
+      }
+
+      if (stats.isDirectory()) {
+        this.setState({ path: fullPath, filename: null });
+      } else {
+        const filename = fullPath.split('/')[fullPath.split('/').length - 1];
+        const path = fullPath.substring(0, fullPath.length - filename.length - 1);
+        this.setState({ path, filename });
+      }
+    });
+    
   }
 
   loadFiles() {
@@ -78,7 +84,10 @@ class App extends React.Component {
     fs.rename(
       `${this.state.path}/${this.state.filename}`,
       `${this.state.path}/${newFilename}`,
-      () => this.setState({ files, filename: newFilename }),
+      () => {
+        this.setState({ files, filename: newFilename })
+        NotificationHelper.notify({ key: `${index}-${this.state.path}`, type: 'Success', message: 'Filename updated' })
+      },
     );
   }
 

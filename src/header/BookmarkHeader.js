@@ -2,6 +2,7 @@ import React from 'react';
 import './BookmarkHeader.css';
 import { FaBookmark, FaTrash, FaRegStar, FaStar } from 'react-icons/fa';
 import Dropdown from '../controls/Dropdown';
+import NotificationHelper from '../helper/notification-helper';
 
 class BookmarkHeader extends React.Component {
   constructor(props) {
@@ -39,11 +40,13 @@ class BookmarkHeader extends React.Component {
       .filter((x) => x.path !== bookmark.path)
       .concat([bookmark]);
     this.setState({ bookmarks: newBookmarks });
+    NotificationHelper.notify({ type: 'Success', message: 'Bookmarked' });
   }
 
   removeBookmark(path) {
     const newBookmarks = this.state.bookmarks.filter((x) => x.path !== path);
     this.setState({ bookmarks: newBookmarks });
+    NotificationHelper.notify({ type: 'Warning', message: 'Removed bookmark' });
   }
 
   render() {
