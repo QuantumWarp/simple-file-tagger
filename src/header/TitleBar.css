@@ -1,7 +1,8 @@
 .Title-bar {
   -webkit-app-region: drag;
   display: flex;
-  height: 24px;
+  align-items: center;
+  height: 28px;
   background-color: #282c34;
 }
 

@@ -48,7 +48,7 @@
     "extends": null,
     "files": [
       "build/**/*",
-      "electron/main.js"
+      "electron/**/*"
     ]
   }
 }

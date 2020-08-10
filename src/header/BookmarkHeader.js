@@ -51,13 +51,15 @@ class BookmarkHeader extends React.Component {
 
   render() {
     return <div className="Bookmark-header">
-      <button
-        className="Bookmarks-button"
-        title="Bookmarks"
-        onClick={() => this.setState({ dropdownOpen: !this.state.dropdownOpen })}
-      >
-        <FaBookmark></FaBookmark>
-      </button>
+      {this.state.bookmarks.length !== 0 && 
+        <button
+          className="Bookmarks-button"
+          title="Bookmarks"
+          onClick={() => this.setState({ dropdownOpen: !this.state.dropdownOpen })}
+        >
+          <FaBookmark></FaBookmark>
+        </button>
+      }
 
       <button title={this.currentBookmark ? 'Unfavourite' : 'Favourite'}>
         {!this.currentBookmark && <FaRegStar onClick={() => this.addBookmark()}></FaRegStar>}

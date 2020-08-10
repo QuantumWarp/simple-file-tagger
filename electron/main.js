@@ -8,9 +8,9 @@ let mainWindow;
  
 function createWindow() {
     mainWindow = new BrowserWindow({
-        width:800,
-        height:600,
-        frame: isDev,
+        width: 1280,
+        height: 800,
+        frame: false,
         show: false,
         webPreferences: {
             nodeIntegration: true,
@@ -22,6 +22,7 @@ function createWindow() {
     if (!isDev) {
         mainWindow.removeMenu();
     }
+    mainWindow.maximize();
     mainWindow.loadURL(startURL);
  
     mainWindow.once('ready-to-show', () => mainWindow.show());
