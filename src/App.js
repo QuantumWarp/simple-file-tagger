@@ -51,8 +51,8 @@ class App extends React.Component {
     const isDiskPath = this.state.disks.find((x) => fullPath === x);
     const statPath = fullPath + (isDiskPath ? '/' : '');
     fullPath = isDiskPath ? fullPath : pathUtil.resolve(fullPath).substring(1);
-    console.log(statPath);
-    fs.lstat('E:/', (err, stats) => {
+
+    fs.lstat(statPath, (err, stats) => {
       if (err) {
         NotificationHelper.notify({ type: 'Error', message: 'Invalid file or path' });
         return;
