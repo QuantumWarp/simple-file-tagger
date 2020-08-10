@@ -17,6 +17,7 @@ class FileNode extends React.Component {
   render() {
     return <div
       className={`File-node ${this.props.selected ? 'Selected' : ''}`}
+      title={this.props.nodeData.name}
       onClick={this.props.onClick}
     >
       <span className="Icon">

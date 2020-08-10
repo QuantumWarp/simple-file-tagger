@@ -27,30 +27,35 @@ class PathHeader extends React.Component {
 
   render() {
     return <div className="Path-header">
-      {this.driveSegment && 
-        <button onClick={() => this.setState({ dropdownOpen: !this.state.dropdownOpen })}>
-          <span className="Segment" title="Change Drive">{this.driveSegment}</span>/
-        </button>
-      }
-
-      <Dropdown open={this.state.dropdownOpen}>
+      <Dropdown
+        open={this.state.dropdownOpen}
+        onClose={() => this.setState({ dropdownOpen: false })}
+      >
         {this.props.disks.map((x) =>
           <Dropdown.Item
             key={x}
             onClick={() => this.props.onPathChange(`${x}/`)}
-          >{x}</Dropdown.Item>
+          ><span className="Path-header-disk">{x}</span></Dropdown.Item>
         )}
       </Dropdown>
 
-      {this.otherSegments.map((x, index) =>
-        <span key={`${x}/${index}`}>
-          <span
-            className="Segment"
-            onClick={() => this.segmentSelected(index)}
-          >
-            {x}
-          </span>/
-        </span>)}
+      <div className="Path-header-inner">
+        {this.driveSegment && 
+          <button onClick={() => this.setState({ dropdownOpen: !this.state.dropdownOpen })}>
+            <span className="Segment" title="Change Drive">{this.driveSegment}</span>/
+          </button>
+        }
+
+        {this.otherSegments.map((x, index) =>
+          <span key={`${x}/${index}`}>
+            <span
+              className="Segment"
+              onClick={() => this.segmentSelected(index)}
+            >
+              {x}
+            </span>/
+          </span>)}
+      </div>
     </div>;
   }
 }

@@ -1,6 +1,22 @@
 .Bookmark-header {
   display: flex;
+  position: relative;
 }
 .Bookmark-header > :first-child {
   margin: 0px 10px;
+}
+
+.Bookmark-item {
+  min-width: 300px;
+  max-width: 600px;
+  padding: 4px 8px;
+  font-size: calc(10px + 1vmin);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.Bookmark-item > span {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }

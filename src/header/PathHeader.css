@@ -1,8 +1,14 @@
 .Path-header {
+  position: relative;
+  margin-left: 10px;
+}
+.Path-header-inner {
   cursor: pointer;
   display: flex;
-  margin-left: 10px;
-  overflow: auto;
+  overflow-x: auto;
+}
+.Path-header-disk {
+  padding: 0px 5px;
 }
 
 .Segment {

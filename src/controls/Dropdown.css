@@ -1,14 +1,17 @@
 .Dropdown {
   position: absolute;
-  max-height: 0px;
+  opacity: 0;
   overflow: hidden;
-  transition: max-height 0.5s ease-out;
+  transition: opacity 0.2s ease-out;
+  top: calc(100% + 2px);
+  left: 0;
+  box-shadow: 0 0 12px #333;
 }
 .Dropdown.open {
-  max-height: 200px;
+  opacity: 1;
 }
 .Dropdown-inner {
-  border: 1px solid black;
+  border: 1px solid grey;
   background-color: #282c34;
   cursor: pointer;
 }

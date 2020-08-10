@@ -52,6 +52,7 @@ class BookmarkHeader extends React.Component {
   render() {
     return <div className="Bookmark-header">
       <button
+        className="Bookmarks-button"
         title="Bookmarks"
         onClick={() => this.setState({ dropdownOpen: !this.state.dropdownOpen })}
       >
@@ -63,15 +64,24 @@ class BookmarkHeader extends React.Component {
         {this.currentBookmark && <FaStar onClick={() => this.removeBookmark(this.props.path)}></FaStar>}
       </button>
 
-      <Dropdown open={this.state.dropdownOpen}>
+      <Dropdown
+        open={this.state.dropdownOpen}
+        onClose={() => this.setState({ dropdownOpen: false })}
+      >
         {this.state.bookmarks.map((x) =>
           <Dropdown.Item
             key={x.path}
             onClick={() => this.props.onPathChange(x.path)}
           >
-            <div title={x.path}>
+            <div
+              className="Bookmark-item"
+              title={x.path}
+            >
               <span>{x.name}</span>
-              <FaTrash onClick={() => this.removeBookmark(x.path)}></FaTrash>
+              <FaTrash
+                title="Remove bookmark"
+                onClick={(event) => { event.stopPropagation(); this.removeBookmark(x.path); }}>
+              </FaTrash>
             </div>
           </Dropdown.Item>
         )}
