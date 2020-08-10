@@ -1,5 +1,6 @@
 import React from 'react';
 import './App.css';
+import TitleBar from './header/TitleBar';
 import BookmarkHeader from './header/BookmarkHeader';
 import PathHeader from './header/PathHeader';
 import FileDetail from './file-detail/FileDetail';
@@ -96,6 +97,9 @@ class App extends React.Component {
   render() {
     return <div className="App">
       <Notification></Notification>
+
+      <TitleBar></TitleBar>
+
       <header>
         <BookmarkHeader
           path={this.state.path}

@@ -1,7 +1,8 @@
-const { app, BrowserWindow } = require('electron');
+const { app, mainIpc, BrowserWindow } = require('electron');
 const isDev = require('electron-is-dev');   
 const path = require('path');
 const remoteMethods = require('./remote-methods');
+remoteMethods.setup();
  
 let mainWindow;
  
@@ -9,6 +10,7 @@ function createWindow() {
     mainWindow = new BrowserWindow({
         width:800,
         height:600,
+        frame: isDev,
         show: false,
         webPreferences: {
             nodeIntegration: true,
@@ -17,14 +19,12 @@ function createWindow() {
     });
     const startURL = isDev ? 'http://localhost:3000' : `file://${path.join(__dirname, '../build/index.html')}`;
  
-    mainWindow.removeMenu();
+    if (!isDev) {
+        mainWindow.removeMenu();
+    }
     mainWindow.loadURL(startURL);
  
     mainWindow.once('ready-to-show', () => mainWindow.show());
-    mainWindow.on('closed', () => {
-        mainWindow = null;
-    });
+    mainWindow.on('closed', () => { mainWindow = null; });
 }
 app.on('ready', createWindow);
-
-remoteMethods.setup();
