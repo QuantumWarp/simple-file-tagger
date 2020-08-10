@@ -33,7 +33,6 @@ class FileList extends React.Component {
             selected={x.name === this.props.filename}
             nodeData={x}
             onClick={() => this.props.onLocationSelected(`${this.props.path}/${x.name}`)}
-            speed={index > 40}
           />
         )}
       </InfiniteScroll>

@@ -26,6 +26,13 @@ class App extends React.Component {
   }
 
   async componentDidMount() {
+    electron.ipcRenderer.on('loadFilesResponse', (event, files) => {
+      if (this.state.path.split('/').filter((x) => Boolean(x)).length > 1) {
+        files = [{ name: '..', isUp: true }].concat(files);
+      }
+      this.setState({ files });
+    });
+
     const path = localStorage.getItem('path');
     if (path) {
       this.setLocation(path);
@@ -36,7 +43,7 @@ class App extends React.Component {
   componentDidUpdate(prevProps, prevState) {
     if (this.state.path !== prevState.path) {
       localStorage.setItem('path', this.state.path);
-      this.loadFiles();
+      electron.ipcRenderer.send('loadFiles', this.state.path + '/');
     }
   }
 
@@ -59,19 +66,6 @@ class App extends React.Component {
         this.setState({ path, filename });
       }
     });
-    
-  }
-
-  loadFiles() {
-    fs.readdir(
-      this.state.path + '/',
-      { withFileTypes: true },
-      (err, files) => {
-        if (this.state.path.split('/').filter((x) => Boolean(x)).length > 1) {
-          files = [{ name: '..' }].concat(files);
-        }
-        this.setState({ files });
-      });
   }
 
   async loadDisks() {

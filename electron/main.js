@@ -1,6 +1,7 @@
 const { app, BrowserWindow } = require('electron');
 const isDev = require('electron-is-dev');   
 const path = require('path');
+const remoteMethods = require('./remote-methods');
  
 let mainWindow;
  
@@ -24,3 +25,5 @@ function createWindow() {
     });
 }
 app.on('ready', createWindow);
+
+remoteMethods.setup();

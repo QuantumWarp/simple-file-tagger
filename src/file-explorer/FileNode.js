@@ -5,7 +5,7 @@ import FileHelper from '../helper/file-helper';
 
 class FileNode extends React.Component {
   get symbol() {
-    const info = FileHelper.getInfo(this.props.nodeData, this.props.speed);
+    const info = FileHelper.getInfo(this.props.nodeData);
     let symbol = null;
     symbol = (info.isFile && 'file') || symbol;
     symbol = (info.isImage && 'image') || symbol;

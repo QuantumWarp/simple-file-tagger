@@ -1,12 +1,7 @@
-class FileHelper {
-  // TODO: These are causing lag on scroll due to many calls to electron remote
-  static getInfo(entry, speed) {
-    if (speed) return {}; // Workaround
-
+class FileHelper {  
+  static getInfo(entry) {
     return {
-      isUp: entry.name === '..',
-      isDirectory: entry.isDirectory && entry.isDirectory(),
-      isFile: entry.isFile && entry.isFile(),
+      ...entry,
       isImage: this.isImage(entry.name),
       extension: this.getExtension(entry.name),
     };
