@@ -15,6 +15,14 @@ const fs = electron.remote.require('fs');
 const nodeDiskInfo = electron.remote.require('node-disk-info');
 
 class App extends React.Component {
+  static async fileExists(path) {
+    return new Promise((resolve) => {
+      fs.access(path, fs.F_OK, (err) => {
+        resolve(!err);
+      });
+    });
+  }
+
   constructor() {
     super();
 
@@ -38,9 +46,9 @@ class App extends React.Component {
 
     const path = localStorage.getItem('path');
     if (path) {
-      this.setLocation(path);
+      await this.setLocation(path);
     }
-    this.loadDisks();
+    await this.loadDisks();
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -51,26 +59,27 @@ class App extends React.Component {
     }
   }
 
-  setLocation(newFullPath) {
+  async setLocation(newFullPath) {
     let fullPath = newFullPath;
     const { disks } = this.state;
     const isDiskPath = disks.find((x) => fullPath === x);
     const statPath = fullPath + (isDiskPath ? '/' : '');
     fullPath = isDiskPath ? fullPath : pathUtil.resolve(fullPath).substring(1);
 
-    fs.lstat(statPath, (err, stats) => {
-      if (err) {
-        NotificationHelper.notify({ type: 'Error', message: 'Invalid file or path' });
-        return;
-      }
+    return new Promise((resolve) => {
+      fs.lstat(statPath, (err, stats) => {
+        if (err) {
+          NotificationHelper.notify({ type: 'Error', message: 'Invalid file or path' });
+        } else if (stats.isDirectory()) {
+          this.setState({ path: fullPath, filename: null });
+        } else {
+          const filename = fullPath.split('/')[fullPath.split('/').length - 1];
+          const path = fullPath.substring(0, fullPath.length - filename.length - 1);
+          this.setState({ path, filename });
+        }
 
-      if (stats.isDirectory()) {
-        this.setState({ path: fullPath, filename: null });
-      } else {
-        const filename = fullPath.split('/')[fullPath.split('/').length - 1];
-        const path = fullPath.substring(0, fullPath.length - filename.length - 1);
-        this.setState({ path, filename });
-      }
+        resolve();
+      });
     });
   }
 
@@ -83,22 +92,35 @@ class App extends React.Component {
     });
   }
 
-  updateFilename(newFilename) {
+  async updateFilename(newFilename) {
     const { files, path, filename } = this.state;
     const newFiles = [...files];
     const file = files.find((x) => x.name === filename);
     const index = newFiles.indexOf(file);
     const newFile = { ...file, name: newFilename };
     newFiles[index] = newFile;
+    const oldFullPath = `${path}/${filename}`;
+    const newFullPath = `${path}/${newFilename}`;
+    const alreadyExists = await App.fileExists(newFullPath);
 
-    fs.rename(
-      `${path}/${filename}`,
-      `${path}/${newFilename}`,
-      () => {
-        this.setState({ files: newFiles, filename: newFilename });
-        NotificationHelper.notify({ key: `${index}-${path}`, type: 'Success', message: 'Filename updated' });
-      },
-    );
+    return new Promise((resolve) => {
+      if (oldFullPath === newFullPath) {
+        resolve(true);
+      } else if (alreadyExists) {
+        NotificationHelper.notify({ type: 'Warning', message: 'Filename already exists.' });
+        resolve(false);
+      } else {
+        fs.rename(
+          oldFullPath,
+          newFullPath,
+          () => {
+            this.setState({ files: newFiles, filename: newFilename });
+            NotificationHelper.notify({ key: `${index}-${path}`, type: 'Success', message: 'Filename updated' });
+            resolve(true);
+          },
+        );
+      }
+    });
   }
 
   render() {

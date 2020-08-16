@@ -2,7 +2,7 @@
   cursor: pointer;
   display: flex;
   flex-direction: row;
-  justify-content: start;
+  justify-content: flex-start;
   font-size: calc(10px + 0.8vmin);
   padding: 0px 20px;
   width: 100%;
@@ -25,6 +25,6 @@
 
 .File-node > span {
   overflow: hidden;
-  white-space: nowrap;
+  white-space: pre;
   text-overflow: ellipsis;
 }

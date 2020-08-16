@@ -84,13 +84,12 @@ class TagDatePicker extends React.Component {
 
   dateChanged(newDate) {
     const { date } = this.state;
-    const hadDate = !date;
-    if (hadDate) {
+    if (!date) {
       this.setState({
         date: newDate, day: true, month: true, year: true,
       });
     } else {
-      this.setState({ date });
+      this.setState({ date: newDate });
     }
   }
 

@@ -53,7 +53,7 @@ class FileHelper {
   }) {
     const sortedTags = tags.sort();
     const combinedTags = dateTag ? [dateTag].concat(sortedTags) : sortedTags;
-    let filename = name;
+    let filename = name.trim();
     filename += combinedTags.length === 0 ? '' : ` [${combinedTags.join(',')}]`;
     filename += `.${extension}`;
     return filename;

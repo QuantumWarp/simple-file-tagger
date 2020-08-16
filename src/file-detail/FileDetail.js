@@ -7,9 +7,18 @@ const electron = window.require('electron');
 const fs = electron.remote.require('fs');
 
 class FileDetail extends React.Component {
+  root = React.createRef();
+
+  defaultState = { imageData: null, imageDataError: false, zoom: 100 };
+
   constructor(props) {
     super(props);
-    this.state = { imageData: null, imageDataError: false };
+    this.state = { ...this.defaultState };
+    this.boundZoomHandler = this.zoomHandler.bind(this);
+  }
+
+  componentDidMount() {
+    this.root.current.addEventListener('wheel', this.boundZoomHandler);
   }
 
   componentDidUpdate(prevProps) {
@@ -23,6 +32,7 @@ class FileDetail extends React.Component {
             this.setState({
               imageData: `data:image/${FileHelper.getExtension(filename)};base64,${data.toString('base64')}`,
               imageDataError: false,
+              zoom: 100,
             });
           } else {
             this.clearImageData();
@@ -32,19 +42,43 @@ class FileDetail extends React.Component {
     }
   }
 
+  componentWillUnmount() {
+    this.root.current.removeEventListener('wheel', this.boundZoomHandler);
+  }
+
+  zoomHandler(event) {
+    if (!event.ctrlKey) return;
+    const { zoom } = this.state;
+    const amount = -event.deltaY / 10;
+    let newZoom = zoom + amount;
+    if (newZoom >= 400) newZoom = 400;
+    if (newZoom <= 100) newZoom = 100;
+    this.setState({ zoom: newZoom });
+  }
+
   clearImageData() {
-    this.setState({ imageData: null, imageDataError: false });
+    this.setState({ ...this.defaultState });
   }
 
   render() {
     const { filename } = this.props;
-    const { imageData, imageDataError } = this.state;
+    const { imageData, imageDataError, zoom } = this.state;
     return (
-      <div className="File-detail">
+      <div
+        ref={this.root}
+        className="File-detail"
+      >
         {!filename && <div className="Message">No file selected</div>}
         {!imageData && filename && <div className="Message">No preview available</div>}
         {imageData && imageDataError && <div className="Message">Preview failed</div>}
-        {imageData && !imageDataError && <img src={imageData} onError={() => this.setState({ imageDataError: true })} alt="" />}
+        {imageData && !imageDataError && (
+          <img
+            style={{ width: `${zoom}%` }}
+            src={imageData}
+            onError={() => this.setState({ imageDataError: true })}
+            alt=""
+          />
+        )}
       </div>
     );
   }

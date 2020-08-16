@@ -22,7 +22,7 @@ class TagContainer extends React.Component {
       name, dateTag, tags, extension,
     } = this.state;
 
-    if (!this.intialUpdate
+    if (!this.externalUpdate
       && (name !== prevState.name
       || dateTag !== prevState.dateTag
       || tags.length !== prevState.tags.length
@@ -32,17 +32,19 @@ class TagContainer extends React.Component {
       onFilenameChange(newFilename);
     }
 
-    this.intialUpdate = false;
+    this.externalUpdate = false;
 
-    if (path !== prevProps.path
-      || filename !== prevProps.filename
+    if (Boolean(filename)
+      && (path !== prevProps.path
+      || filename !== prevProps.filename)
     ) {
-      if (filename) {
-        const parsedFile = FileHelper.parseFilename(filename);
-        this.intialUpdate = true;
-        // eslint-disable-next-line react/no-did-update-set-state
-        this.setState(parsedFile);
-      }
+      const parsedFile = FileHelper.parseFilename(filename);
+      this.externalUpdate = true;
+      // eslint-disable-next-line react/no-did-update-set-state
+      this.setState({
+        ...parsedFile,
+        name: name.trim() === parsedFile.name.trim() ? name : parsedFile.name,
+      });
     }
   }
 
