@@ -1,8 +1,8 @@
 .Title-bar {
   -webkit-app-region: drag;
   display: flex;
-  align-items: center;
-  height: 28px;
+  align-items: stretch;
+  height: 30px;
   background-color: #282c34;
 }
 
@@ -10,6 +10,13 @@
   flex: 1;
   font-size: 18px;
   padding-left: 10px;
+  display: flex;
+  align-items: center;
+}
+.Logo {
+  height: 24px;
+  width: 24px;
+  margin-right: 8px;
 }
 
 .Title-buttons {

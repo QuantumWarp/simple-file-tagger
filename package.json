@@ -1,6 +1,8 @@
 {
   "name": "simple-file-tagger",
-  "version": "0.1.0",
+  "version": "1.0.0",
+  "author": "quantumwss@hotmail.com",
+  "description": "A simple file tagger",
   "homepage": "./",
   "main": "./electron/main.js",
   "private": true,
@@ -58,6 +60,13 @@
   },
   "build": {
     "extends": null,
+    "win": {
+      "icon": "build/logo512.png",
+      "target": ["portable"]
+    },
+    "portable": {
+      "artifactName": "SimpleFileTagger.exe"
+    },
     "files": [
       "build/**/*",
       "electron/**/*"

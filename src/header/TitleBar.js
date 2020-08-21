@@ -3,6 +3,7 @@ import './TitleBar.css';
 import {
   FaRegWindowMinimize, FaRegWindowMaximize, FaRegWindowRestore, FaRegWindowClose,
 } from 'react-icons/fa';
+import { ReactComponent as Logo } from '../assets/logo.svg';
 
 const electron = window.require('electron');
 const { BrowserWindow } = electron.remote;
@@ -24,7 +25,11 @@ class TitleBar extends React.Component {
     const { maximized } = this.state;
     return (
       <div className="Title-bar">
-        <div className="Title">File Tagger</div>
+        <div className="Title">
+          <Logo className="Logo" />
+          File Tagger
+        </div>
+
         <div className="Title-buttons">
           <button type="button" onClick={() => BrowserWindow.getFocusedWindow().minimize()}>
             <FaRegWindowMinimize />
