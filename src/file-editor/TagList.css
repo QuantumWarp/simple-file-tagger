@@ -6,40 +6,40 @@
   overflow-y: auto;
 }
 
-.Tag-add {
+.Tag-list .Tag-add {
   display: flex;
   margin-bottom: 10px;
 }
-.Tag-add > input {
+.Tag-list .Tag-add > input {
   flex: 3;
 }
-.Tag-add > button {
+.Tag-list .Tag-add > button {
   flex: 1;
   margin: 8px 0px;
   margin-left: 20px;
 }
 
-.Tag {
+.Tag-list .Tag {
   display: flex;
   flex-direction: row;
   align-items: stretch;
   justify-content: space-between;
   height: 28px;
 }
-.Tag:hover {
+.Tag-list .Tag:hover {
   background-color: var(--hover-background-color);
 }
-.Tag > .checkbox {
+.Tag-list .Tag > .checkbox {
   flex: 1;
 }
 
-.List {
+.Tag-list .List {
   flex: 1 1 auto;
   height: 0px;
 }
-.Remove {
+.Tag-list .Remove {
   margin: 0px 10px;
 }
-.Remove:hover {
+.Tag-list .Remove:hover {
   color: #bd362f;
 }

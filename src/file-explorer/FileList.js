@@ -1,17 +1,20 @@
-import React from 'react';
 import PropTypes from 'prop-types';
+import React from 'react';
 import InfiniteScroll from 'react-infinite-scroller';
+
 import './FileList.css';
 import FileNode from './FileNode';
 
 class FileList extends React.Component {
   constructor(props) {
     super(props);
+
     this.state = { limit: 40 };
   }
 
   componentDidUpdate(prevProps) {
     const { files } = this.props;
+
     if (files !== prevProps.files) {
       this.resetLimit();
     }
@@ -32,6 +35,7 @@ class FileList extends React.Component {
       files, filename, path, onLocationSelected,
     } = this.props;
     const { limit } = this.state;
+
     return (
       <div className="File-list">
         <InfiniteScroll

@@ -4,11 +4,11 @@
   flex-direction: row;
 }
 
-.Name {
+.Basic-info .Name {
   flex: 7;
 }
 
-.Extension {
+.Basic-info .Extension {
   flex: 3;
   margin-left: 20px;
 }

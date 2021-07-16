@@ -5,10 +5,8 @@ const remoteMethods = require('./remote-methods');
 
 remoteMethods.setup();
 
-let mainWindow;
-
-function createWindow() {
-  mainWindow = new BrowserWindow({
+const createWindow = () => {
+  let mainWindow = new BrowserWindow({
     width: 1280,
     height: 800,
     frame: isDev,
@@ -23,10 +21,10 @@ function createWindow() {
   if (!isDev) {
     mainWindow.removeMenu();
   }
-  mainWindow.maximize();
   mainWindow.loadURL(startURL);
 
   mainWindow.once('ready-to-show', () => mainWindow.show());
   mainWindow.on('closed', () => { mainWindow = null; });
-}
+};
+
 app.on('ready', createWindow);

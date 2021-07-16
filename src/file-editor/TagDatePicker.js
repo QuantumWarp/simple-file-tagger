@@ -1,5 +1,6 @@
-import React from 'react';
 import PropTypes from 'prop-types';
+import React from 'react';
+
 import './TagDatePicker.css';
 
 class TagDatePicker extends React.Component {
@@ -12,11 +13,13 @@ class TagDatePicker extends React.Component {
 
   constructor(props) {
     super(props);
+
     this.state = this.defaultState;
   }
 
   componentDidUpdate(prevProps, prevState) {
     const { value, onChange } = this.props;
+
     if (value !== prevProps.value) {
       this.parse(value);
       return;
@@ -84,6 +87,7 @@ class TagDatePicker extends React.Component {
 
   dateChanged(newDate) {
     const { date } = this.state;
+
     if (!date) {
       this.setState({
         date: newDate, day: true, month: true, year: true,
@@ -122,7 +126,7 @@ class TagDatePicker extends React.Component {
               onChange={(event) => this.setState({ day: event.target.checked })}
             />
             <div className="box" />
-            Day
+            <span>Day</span>
           </label>
 
           <label
@@ -136,7 +140,7 @@ class TagDatePicker extends React.Component {
               onChange={(event) => this.setState({ month: event.target.checked })}
             />
             <div className="box" />
-            Month
+            <span>Month</span>
           </label>
 
           <label
@@ -150,7 +154,7 @@ class TagDatePicker extends React.Component {
               onChange={(event) => this.setState({ year: event.target.checked })}
             />
             <div className="box" />
-            Year
+            <span>Year</span>
           </label>
         </div>
       </div>

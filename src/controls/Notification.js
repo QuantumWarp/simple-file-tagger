@@ -9,6 +9,7 @@ class Notification extends React.Component {
 
   constructor(props) {
     super(props);
+
     this.state = { notifications: [] };
   }
 
@@ -19,6 +20,7 @@ class Notification extends React.Component {
   addNotification(newNotification) {
     const notification = { ...newNotification };
     const { notifications } = this.state;
+
     if (!notification.key) {
       this.count += 1;
       notification.key = this.count;
@@ -32,6 +34,7 @@ class Notification extends React.Component {
 
   clearNotification(notification) {
     const { notifications } = this.state;
+
     if (notifications.includes(notification)) {
       this.setState({ notifications: notifications.filter((x) => x !== notification) });
     }
@@ -39,6 +42,7 @@ class Notification extends React.Component {
 
   render() {
     const { notifications } = this.state;
+
     return (
       <div className="Notification">
         {notifications.map((x) => (
@@ -54,6 +58,7 @@ class Notification extends React.Component {
               {x.type === 'Warning' && <MdWarning />}
               {x.type === 'Error' && <MdError />}
             </div>
+
             <span>{x.message}</span>
           </button>
         ))}

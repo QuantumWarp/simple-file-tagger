@@ -5,7 +5,7 @@
   bottom: 0;
 }
 
-.Item {
+.Notification .Item {
   margin: 15px 20px;
   padding: 15px 10px;
   max-width: 300px;
@@ -18,27 +18,28 @@
   align-items: center;
   justify-content: flex-start;
 }
-
-.Item:hover {
+.Notification .Item:hover {
   box-shadow: 0 0 12px #000;
   opacity: 1;
 }
-.Item > span {
+
+.Notification .Item > span {
   font-size: 20px;
 }
-.Item > .Icon {
+.Notification .Item > .Icon {
   font-size: 28px;
   margin-right: 10px;
 }
-.Item.Success {
+
+.Notification .Item.Success {
   background-color: var(--success-color);
 }
-.Item.Info {
+.Notification .Item.Info {
   background-color: var(--info-color);
 }
-.Item.Warning {
+.Notification .Item.Warning {
   background-color: var(--warning-color);
 }
-.Item.Error {
+.Notification .Item.Error {
   background-color: var(--error-color);
 }

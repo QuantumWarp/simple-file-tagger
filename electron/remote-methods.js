@@ -7,7 +7,7 @@ module.exports = {
       fs.readdir(
         path,
         { withFileTypes: true },
-        (err, files) => {
+        (_err, files) => {
           const result = files.map((x) => ({
             name: x.name,
             isDirectory: x.isDirectory(),

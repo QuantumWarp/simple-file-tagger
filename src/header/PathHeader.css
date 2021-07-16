@@ -6,24 +6,24 @@
   display: flex;
   padding: 10px;
 }
-.Path-header-inner {
+.Path-header .Path-header-inner {
   width: 0px;
   flex: 1 1 auto;
   cursor: pointer;
   display: flex;
   overflow-x: auto;
 }
-.Path-header-disk {
+.Path-header .Path-header-disk {
   padding: 0px 5px;
 }
 
-.Segment-container {
+.Path-header .Segment-container {
   display: flex;
   flex-direction: row;
 }
-.Segment {
+.Path-header .Segment {
   white-space: nowrap;
 }
-.Segment:hover {
+.Path-header .Segment:hover {
   background-color: grey;
 }

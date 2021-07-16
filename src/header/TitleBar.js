@@ -1,8 +1,9 @@
 import React from 'react';
-import './TitleBar.css';
 import {
   VscChromeClose, VscChromeMaximize, VscChromeMinimize, VscChromeRestore,
 } from 'react-icons/vsc';
+
+import './TitleBar.css';
 import { ReactComponent as Logo } from '../assets/logo.svg';
 
 const electron = window.require('electron');
@@ -11,6 +12,7 @@ const { BrowserWindow } = electron.remote;
 class TitleBar extends React.Component {
   constructor(props) {
     super(props);
+
     this.state = { maximized: false };
   }
 
@@ -23,6 +25,7 @@ class TitleBar extends React.Component {
 
   render() {
     const { maximized } = this.state;
+
     return (
       <div className="Title-bar">
         <div className="Title">
@@ -34,16 +37,19 @@ class TitleBar extends React.Component {
           <button type="button" onClick={() => BrowserWindow.getFocusedWindow().minimize()}>
             <VscChromeMinimize />
           </button>
+
           {!maximized && (
             <button type="button" onClick={() => BrowserWindow.getFocusedWindow().maximize()}>
               <VscChromeMaximize />
             </button>
           )}
+
           {maximized && (
             <button type="button" onClick={() => BrowserWindow.getFocusedWindow().restore()}>
               <VscChromeRestore />
             </button>
           )}
+
           <button type="button" onClick={() => BrowserWindow.getFocusedWindow().close()}>
             <VscChromeClose />
           </button>

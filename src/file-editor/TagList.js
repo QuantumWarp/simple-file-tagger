@@ -1,11 +1,13 @@
-import React from 'react';
 import PropTypes from 'prop-types';
-import './TagList.css';
+import React from 'react';
 import { FaTrash } from 'react-icons/fa';
+
+import './TagList.css';
 
 class TagList extends React.Component {
   constructor(props) {
     super(props);
+
     this.state = {
       newTagInput: '',
       tagOptions: [],
@@ -14,6 +16,7 @@ class TagList extends React.Component {
 
   componentDidMount() {
     const tagOptions = localStorage.getItem('tagOptions');
+
     if (tagOptions) {
       this.setState({ tagOptions: JSON.parse(tagOptions) });
     }
@@ -22,6 +25,7 @@ class TagList extends React.Component {
   componentDidUpdate(prevProps, prevState) {
     const { tags } = this.props;
     const { tagOptions } = this.state;
+
     if (tagOptions.length !== prevState.tagOptions.length) {
       localStorage.setItem('tagOptions', JSON.stringify(tagOptions));
     }
@@ -37,6 +41,7 @@ class TagList extends React.Component {
 
   addTag() {
     const { tagOptions, newTagInput } = this.state;
+
     if (!tagOptions.includes(newTagInput)) {
       const newTagOptions = tagOptions.concat([newTagInput]);
       this.setState({ tagOptions: newTagOptions });
@@ -48,6 +53,7 @@ class TagList extends React.Component {
 
   removeTag(tag) {
     const { tagOptions } = this.state;
+
     this.updateTagChecked(tag, false);
     const newTagOptions = tagOptions.filter((x) => x !== tag);
     this.setState({ tagOptions: newTagOptions });
@@ -55,6 +61,7 @@ class TagList extends React.Component {
 
   updateTagChecked(tag, checked) {
     const { tags, onTagsChange } = this.props;
+
     if (checked && !tags.includes(tag)) {
       const newTags = tags.concat([tag]);
       onTagsChange(newTags);
@@ -67,6 +74,7 @@ class TagList extends React.Component {
   render() {
     const { tags } = this.props;
     const { tagOptions, newTagInput } = this.state;
+
     return (
       <div className="Tag-list">
         <div className="Tag-add">

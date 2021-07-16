@@ -1,14 +1,16 @@
-import React from 'react';
 import PropTypes from 'prop-types';
-import TagDatePicker from './TagDatePicker';
-import TagList from './TagList';
+import React from 'react';
+
+import './FileEditor.css';
 import FileHelper from '../helper/file-helper';
 import BasicInfo from './BasicInfo';
-import './FileEditor.css';
+import TagDatePicker from './TagDatePicker';
+import TagList from './TagList';
 
 class TagContainer extends React.Component {
   constructor(props) {
     super(props);
+
     this.state = {
       name: '',
       dateTag: '',
@@ -53,6 +55,7 @@ class TagContainer extends React.Component {
     const {
       name, dateTag, tags, extension,
     } = this.state;
+
     return (
       <>
         <article className="Basic-info-article">

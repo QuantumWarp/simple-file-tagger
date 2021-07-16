@@ -1,9 +1,10 @@
-import React from 'react';
 import PropTypes from 'prop-types';
-import './FileNode.css';
+import React from 'react';
 import {
   FaFolder, FaImage, FaFile, FaArrowUp, FaQuestion,
 } from 'react-icons/fa';
+
+import './FileNode.css';
 import FileHelper from '../helper/file-helper';
 
 class FileNode extends React.Component {
@@ -20,6 +21,7 @@ class FileNode extends React.Component {
 
   render() {
     const { nodeData, selected, onClick } = this.props;
+
     return (
       <button
         type="button"

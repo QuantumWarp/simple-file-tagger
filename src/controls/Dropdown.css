@@ -11,9 +11,10 @@
   opacity: 1;
   pointer-events: all;
 }
-.Dropdown-item {
+
+.Dropdown .Dropdown-item {
   cursor: pointer;
 }
-.Dropdown-item:hover {
+.Dropdown .Dropdown-item:hover {
   background-color: #4d5157;
 }

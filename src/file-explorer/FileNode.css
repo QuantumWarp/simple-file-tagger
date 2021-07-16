@@ -11,11 +11,11 @@
   background-color: var(--hover-background-color);
 }
 
-.Selected {
+.File-node .Selected {
   background-color: var(--hover-background-color);
 }
 
-.Icon {
+.File-node .Icon {
   min-width: 24px;
   display: flex;
   flex-direction: row;

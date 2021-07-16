@@ -1,13 +1,14 @@
-import React from 'react';
 import pathUtil from 'path';
+import React from 'react';
+
 import './App.css';
-import TitleBar from './header/TitleBar';
+import Notification from './controls/Notification';
+import FileDetail from './file-detail/FileDetail';
+import FileEditor from './file-editor/FileEditor';
+import FileList from './file-explorer/FileList';
 import BookmarkHeader from './header/BookmarkHeader';
 import PathHeader from './header/PathHeader';
-import FileDetail from './file-detail/FileDetail';
-import FileList from './file-explorer/FileList';
-import FileEditor from './file-editor/FileEditor';
-import Notification from './controls/Notification';
+import TitleBar from './header/TitleBar';
 import NotificationHelper from './helper/notification-helper';
 
 const electron = window.require('electron');
@@ -35,7 +36,7 @@ class App extends React.Component {
   }
 
   async componentDidMount() {
-    electron.ipcRenderer.on('loadFilesResponse', (event, files) => {
+    electron.ipcRenderer.on('loadFilesResponse', (_event, files) => {
       const { path } = this.state;
       let newFiles = [...files];
       if (path.split('/').filter((x) => Boolean(x)).length > 1) {
@@ -51,7 +52,7 @@ class App extends React.Component {
     await this.loadDisks();
   }
 
-  componentDidUpdate(prevProps, prevState) {
+  componentDidUpdate(_prevProps, prevState) {
     const { path } = this.state;
     if (path !== prevState.path) {
       localStorage.setItem('path', path);
@@ -138,6 +139,7 @@ class App extends React.Component {
           <div className="Controls">
             <article>
               <h2>File Explorer</h2>
+
               <FileList
                 path={path}
                 filename={filename}

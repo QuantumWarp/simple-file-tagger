@@ -2,7 +2,7 @@
   -webkit-app-region: drag;
   display: flex;
   align-items: stretch;
-  height: 30px;
+  min-height: 30px;
   background-color: var(--title-bar-color);
 }
 

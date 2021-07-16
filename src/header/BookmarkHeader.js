@@ -1,15 +1,17 @@
-import React from 'react';
 import PropTypes from 'prop-types';
-import './BookmarkHeader.css';
+import React from 'react';
 import {
-  FaBookmark, FaTrash, FaRegStar, FaStar,
+  FaBookmark, FaRegStar, FaStar, FaTrash,
 } from 'react-icons/fa';
+
+import './BookmarkHeader.css';
 import Dropdown from '../controls/Dropdown';
 import NotificationHelper from '../helper/notification-helper';
 
 class BookmarkHeader extends React.Component {
   constructor(props) {
     super(props);
+
     this.state = {
       dropdownOpen: false,
       bookmarks: [],
@@ -61,6 +63,7 @@ class BookmarkHeader extends React.Component {
   render() {
     const { path, onPathChange } = this.props;
     const { bookmarks, dropdownOpen } = this.state;
+
     return (
       <div className="Bookmark-header">
         <button

@@ -1,7 +1,8 @@
-import React from 'react';
 import PropTypes from 'prop-types';
-import './FileDetail.css';
+import React from 'react';
 import FileHelper from '../helper/file-helper';
+
+import './FileDetail.css';
 
 const electron = window.require('electron');
 const fs = electron.remote.require('fs');
@@ -15,6 +16,7 @@ class FileDetail extends React.Component {
 
   constructor(props) {
     super(props);
+
     this.state = { ...this.defaultState };
     this.boundZoomHandler = this.zoomHandler.bind(this);
   }
@@ -25,11 +27,12 @@ class FileDetail extends React.Component {
 
   componentDidUpdate(prevProps) {
     const { path, filename } = this.props;
+
     if (prevProps.path !== path || prevProps.filename !== filename) {
       if (!filename || !FileHelper.isImage(filename)) {
         this.clearImageData();
       } else {
-        fs.readFile(`${path}/${filename}`, (err, data) => {
+        fs.readFile(`${path}/${filename}`, (_err, data) => {
           if (data) {
             this.setState({
               imageData: `data:image/${FileHelper.getExtension(filename)};base64,${data.toString('base64')}`,
@@ -50,14 +53,18 @@ class FileDetail extends React.Component {
 
   zoomHandler(event) {
     if (!event.ctrlKey) return;
+
     const { zoom } = this.state;
-    const amount = -event.deltaY / 1000;
+    const amount = event.deltaY / -1000;
     let newZoom = zoom + amount;
     if (newZoom >= 4) newZoom = 4;
     if (newZoom <= 1) newZoom = 1;
-    this.setState({ zoom: newZoom });
 
-    // Center scroll
+    this.setState({ zoom: newZoom });
+    this.centerScroll();
+  }
+
+  centerScroll() {
     const outerWidth = this.rootEl.current.offsetWidth;
     const innerWidth = this.zoomEl.current.offsetWidth;
     this.rootEl.current.scrollLeft = (innerWidth - outerWidth) / 2;
@@ -74,6 +81,7 @@ class FileDetail extends React.Component {
   render() {
     const { filename } = this.props;
     const { imageData, imageDataError, zoom } = this.state;
+
     return (
       <div
         ref={this.rootEl}

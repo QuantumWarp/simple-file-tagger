@@ -1,5 +1,6 @@
-import React from 'react';
 import PropTypes from 'prop-types';
+import React from 'react';
+
 import './Dropdown.css';
 import DropdownItem from './DropdownItem';
 
@@ -8,12 +9,14 @@ class Dropdown extends React.Component {
 
   constructor(props) {
     super(props);
+
     this.myRef = React.createRef();
     this.boundClickHandler = this.clickHandler.bind(this);
   }
 
   componentDidUpdate(prevProps) {
     const { open } = this.props;
+
     if (!prevProps.open && open) {
       document.addEventListener('click', this.boundClickHandler);
     } else if (prevProps.open && !open) {
@@ -29,11 +32,13 @@ class Dropdown extends React.Component {
 
   render() {
     const { open, children } = this.props;
+
     return (
-      <div ref={this.myRef} className={`Dropdown ${open && 'open'}`}>
-        <div className="Dropdown-inner">
-          {children}
-        </div>
+      <div
+        ref={this.myRef}
+        className={`Dropdown ${open && 'open'}`}
+      >
+        {children}
       </div>
     );
   }

@@ -6,7 +6,7 @@
   margin: 0px 10px;
 }
 
-.Bookmark-item {
+.Bookmark-header .Bookmark-item {
   min-width: 300px;
   max-width: 600px;
   padding: 4px 8px;
@@ -16,14 +16,14 @@
   align-items: center;
   background-color: var(--secondary-background-color);
 }
-.Bookmark-item:hover {
+.Bookmark-header .Bookmark-item:hover {
   background-color: var(--hover-background-color);
 }
-.Bookmark-item > span {
+.Bookmark-header .Bookmark-item > span {
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
 }
-.Bookmark-item .Remove:hover {
+.Bookmark-header .Bookmark-item .Remove:hover {
   color: var(--error-color);
 }
