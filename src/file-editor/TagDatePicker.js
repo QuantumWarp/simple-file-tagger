@@ -101,7 +101,7 @@ class TagDatePicker extends React.Component {
     return (
       <div className="Tag-date-picker">
         <label htmlFor="date-tag">
-          Date
+          <span>Date</span>
           <input
             id="date-tag"
             type="date"
@@ -115,7 +115,6 @@ class TagDatePicker extends React.Component {
             htmlFor="tag-day"
             className="checkbox"
           >
-            Day
             <input
               id="tag-day"
               type="checkbox"
@@ -123,13 +122,13 @@ class TagDatePicker extends React.Component {
               onChange={(event) => this.setState({ day: event.target.checked })}
             />
             <div className="box" />
+            Day
           </label>
 
           <label
             htmlFor="tag-month"
             className="checkbox"
           >
-            Month
             <input
               id="tag-month"
               type="checkbox"
@@ -137,13 +136,13 @@ class TagDatePicker extends React.Component {
               onChange={(event) => this.setState({ month: event.target.checked })}
             />
             <div className="box" />
+            Month
           </label>
 
           <label
             htmlFor="tag-year"
             className="checkbox"
           >
-            Year
             <input
               id="tag-year"
               type="checkbox"
@@ -151,6 +150,7 @@ class TagDatePicker extends React.Component {
               onChange={(event) => this.setState({ year: event.target.checked })}
             />
             <div className="box" />
+            Year
           </label>
         </div>
       </div>

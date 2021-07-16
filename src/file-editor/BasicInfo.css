@@ -1,0 +1,14 @@
+.Basic-info {
+  padding: 10px 20px;
+  display: flex;
+  flex-direction: row;
+}
+
+.Name {
+  flex: 7;
+}
+
+.Extension {
+  flex: 3;
+  margin-left: 20px;
+}

@@ -7,9 +7,11 @@ const electron = window.require('electron');
 const fs = electron.remote.require('fs');
 
 class FileDetail extends React.Component {
-  root = React.createRef();
+  rootEl = React.createRef();
 
-  defaultState = { imageData: null, imageDataError: false, zoom: 100 };
+  zoomEl = React.createRef();
+
+  defaultState = { imageData: null, imageDataError: false, zoom: 1 };
 
   constructor(props) {
     super(props);
@@ -18,7 +20,7 @@ class FileDetail extends React.Component {
   }
 
   componentDidMount() {
-    this.root.current.addEventListener('wheel', this.boundZoomHandler);
+    this.rootEl.current.addEventListener('wheel', this.boundZoomHandler);
   }
 
   componentDidUpdate(prevProps) {
@@ -32,7 +34,7 @@ class FileDetail extends React.Component {
             this.setState({
               imageData: `data:image/${FileHelper.getExtension(filename)};base64,${data.toString('base64')}`,
               imageDataError: false,
-              zoom: 100,
+              zoom: 1,
             });
           } else {
             this.clearImageData();
@@ -43,17 +45,26 @@ class FileDetail extends React.Component {
   }
 
   componentWillUnmount() {
-    this.root.current.removeEventListener('wheel', this.boundZoomHandler);
+    this.rootEl.current.removeEventListener('wheel', this.boundZoomHandler);
   }
 
   zoomHandler(event) {
     if (!event.ctrlKey) return;
     const { zoom } = this.state;
-    const amount = -event.deltaY / 10;
+    const amount = -event.deltaY / 1000;
     let newZoom = zoom + amount;
-    if (newZoom >= 400) newZoom = 400;
-    if (newZoom <= 100) newZoom = 100;
+    if (newZoom >= 4) newZoom = 4;
+    if (newZoom <= 1) newZoom = 1;
     this.setState({ zoom: newZoom });
+
+    // Center scroll
+    const outerWidth = this.rootEl.current.offsetWidth;
+    const innerWidth = this.zoomEl.current.offsetWidth;
+    this.rootEl.current.scrollLeft = (innerWidth - outerWidth) / 2;
+
+    const outerHeight = this.rootEl.current.offsetHeight;
+    const innerHeight = this.zoomEl.current.offsetHeight;
+    this.rootEl.current.scrollTop = (innerHeight - outerHeight) / 2;
   }
 
   clearImageData() {
@@ -65,20 +76,25 @@ class FileDetail extends React.Component {
     const { imageData, imageDataError, zoom } = this.state;
     return (
       <div
-        ref={this.root}
+        ref={this.rootEl}
         className="File-detail"
       >
-        {!filename && <div className="Message">No file selected</div>}
-        {!imageData && filename && <div className="Message">No preview available</div>}
-        {imageData && imageDataError && <div className="Message">Preview failed</div>}
-        {imageData && !imageDataError && (
-          <img
-            style={{ width: `${zoom}%` }}
-            src={imageData}
-            onError={() => this.setState({ imageDataError: true })}
-            alt=""
-          />
-        )}
+        <div
+          ref={this.zoomEl}
+          className="Zoom-container"
+          style={{ minWidth: `${zoom * 100}%`, minHeight: `${zoom * 100}%` }}
+        >
+          {!filename && <div className="Message">No file selected</div>}
+          {!imageData && filename && <div className="Message">No preview available</div>}
+          {imageData && imageDataError && <div className="Message">Preview failed</div>}
+          {imageData && !imageDataError && (
+            <img
+              src={imageData}
+              onError={() => this.setState({ imageDataError: true })}
+              alt=""
+            />
+          )}
+        </div>
       </div>
     );
   }

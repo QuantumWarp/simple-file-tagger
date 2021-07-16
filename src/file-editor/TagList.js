@@ -69,7 +69,6 @@ class TagList extends React.Component {
     const { tagOptions, newTagInput } = this.state;
     return (
       <div className="Tag-list">
-        <span className="Label">Tag List</span>
         <div className="Tag-add">
           <input
             type="text"
@@ -95,7 +94,6 @@ class TagList extends React.Component {
                 htmlFor={`tag-${x}`}
                 className="checkbox"
               >
-                {x}
                 <input
                   id={`tag-${x}`}
                   type="checkbox"
@@ -103,10 +101,12 @@ class TagList extends React.Component {
                   onChange={(event) => this.updateTagChecked(x, event.target.value)}
                 />
                 <div className="box" />
+                {x}
               </label>
 
               <button
                 type="button"
+                className="Remove"
                 title="Remove"
                 onClick={() => this.removeTag(x)}
               >

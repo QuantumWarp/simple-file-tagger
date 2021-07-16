@@ -1,6 +1,10 @@
+.Tag-date-picker {
+  padding: 0px 20px 00px 20px;
+}
+
 .Parts {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-  margin-top: 5px;
+  margin-top: 10px;
 }

@@ -1,8 +1,8 @@
 import React from 'react';
 import './TitleBar.css';
 import {
-  FaRegWindowMinimize, FaRegWindowMaximize, FaRegWindowRestore, FaRegWindowClose,
-} from 'react-icons/fa';
+  VscChromeClose, VscChromeMaximize, VscChromeMinimize, VscChromeRestore,
+} from 'react-icons/vsc';
 import { ReactComponent as Logo } from '../assets/logo.svg';
 
 const electron = window.require('electron');
@@ -32,20 +32,20 @@ class TitleBar extends React.Component {
 
         <div className="Title-buttons">
           <button type="button" onClick={() => BrowserWindow.getFocusedWindow().minimize()}>
-            <FaRegWindowMinimize />
+            <VscChromeMinimize />
           </button>
           {!maximized && (
             <button type="button" onClick={() => BrowserWindow.getFocusedWindow().maximize()}>
-              <FaRegWindowMaximize />
+              <VscChromeMaximize />
             </button>
           )}
           {maximized && (
             <button type="button" onClick={() => BrowserWindow.getFocusedWindow().restore()}>
-              <FaRegWindowRestore />
+              <VscChromeRestore />
             </button>
           )}
           <button type="button" onClick={() => BrowserWindow.getFocusedWindow().close()}>
-            <FaRegWindowClose />
+            <VscChromeClose />
           </button>
         </div>
       </div>

@@ -2,7 +2,6 @@
   flex: 1;
   display: flex;
   flex-direction: column;
-  align-items: stretch;
   padding: 10px 20px;
 }
 
@@ -11,16 +10,7 @@
   flex-direction: row;
 }
 
-.Name {
-  flex: 5;
+.Basic-info-article {
+  min-height: 260px;
 }
 
-.Extension {
-  flex: 3;
-  margin-left: 20px;
-}
-
-.Message {
-  margin-top: 50px;
-  text-align: center;
-}

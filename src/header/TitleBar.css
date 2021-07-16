@@ -3,7 +3,7 @@
   display: flex;
   align-items: stretch;
   height: 30px;
-  background-color: #282c34;
+  background-color: var(--title-bar-color);
 }
 
 .Title {

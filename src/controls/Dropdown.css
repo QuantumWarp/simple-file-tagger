@@ -4,17 +4,14 @@
   pointer-events: none;
   overflow: hidden;
   transition: opacity 0.2s ease-out;
-  top: calc(100% + 2px);
-  left: 0;
-  box-shadow: 0 0 12px #333;
+  top: 100%;
+  right: 0;
 }
 .Dropdown.open {
   opacity: 1;
   pointer-events: all;
 }
-.Dropdown-inner {
-  border: 1px solid grey;
-  background-color: #282c34;
+.Dropdown-item {
   cursor: pointer;
 }
 .Dropdown-item:hover {

@@ -1,9 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import './TagContainer.css';
 import TagDatePicker from './TagDatePicker';
 import TagList from './TagList';
 import FileHelper from '../helper/file-helper';
+import BasicInfo from './BasicInfo';
+import './FileEditor.css';
 
 class TagContainer extends React.Component {
   constructor(props) {
@@ -49,55 +50,35 @@ class TagContainer extends React.Component {
   }
 
   render() {
-    const { filename } = this.props;
     const {
       name, dateTag, tags, extension,
     } = this.state;
     return (
-      <div className="Tag-container">
-        {!filename && <div className="Message">No file selected</div>}
-        {filename && (
-          <>
-            <div className="Tag-file-info">
-              <label
-                htmlFor="file-name"
-                className="Name"
-              >
-                Name
-                <input
-                  id="file-name"
-                  type="text"
-                  value={name}
-                  onChange={(event) => this.setState({ name: event.target.value })}
-                />
-              </label>
+      <>
+        <article className="Basic-info-article">
+          <h2>Basic Info</h2>
+          <BasicInfo
+            name={name}
+            extension={extension}
+            onChange={(nameUpdate, extensionUpdate) => this.setState({
+              name: nameUpdate, extension: extensionUpdate,
+            })}
+          />
 
-              <label
-                htmlFor="file-extension"
-                className="Extension"
-              >
-                Extension
-                <input
-                  id="file-extension"
-                  type="text"
-                  value={extension}
-                  onChange={(event) => this.setState({ extension: event.target.value })}
-                />
-              </label>
-            </div>
+          <TagDatePicker
+            value={dateTag}
+            onChange={(dateTagUpdate) => this.setState({ dateTag: dateTagUpdate })}
+          />
+        </article>
 
-            <TagDatePicker
-              value={dateTag}
-              onChange={(dateTagUpdate) => this.setState({ dateTag: dateTagUpdate })}
-            />
-
-            <TagList
-              tags={tags}
-              onTagsChange={(tagsUpdate) => this.setState({ tags: tagsUpdate })}
-            />
-          </>
-        )}
-      </div>
+        <article>
+          <h2>Tagging</h2>
+          <TagList
+            tags={tags}
+            onTagsChange={(tagsUpdate) => this.setState({ tags: tagsUpdate })}
+          />
+        </article>
+      </>
     );
   }
 }

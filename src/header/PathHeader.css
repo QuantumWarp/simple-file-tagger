@@ -1,8 +1,10 @@
 .Path-header {
   flex: 1;
   position: relative;
-  margin-left: 10px;
+  margin-right: 10px;
+  font-size: 20px;
   display: flex;
+  padding: 10px;
 }
 .Path-header-inner {
   width: 0px;

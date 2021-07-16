@@ -63,23 +63,21 @@ class BookmarkHeader extends React.Component {
     const { bookmarks, dropdownOpen } = this.state;
     return (
       <div className="Bookmark-header">
-        {bookmarks.length !== 0 && (
-          <button
-            type="button"
-            className="Bookmarks-button"
-            title="Bookmarks"
-            onClick={() => this.setState({ dropdownOpen: !dropdownOpen })}
-          >
-            <FaBookmark />
-          </button>
-        )}
-
         <button
           type="button"
           title={this.currentBookmark ? 'Unfavourite' : 'Favourite'}
         >
           {!this.currentBookmark && <FaRegStar onClick={() => this.addBookmark()} />}
           {this.currentBookmark && <FaStar onClick={() => this.removeBookmark(path)} />}
+        </button>
+
+        <button
+          type="button"
+          className="Bookmarks-button"
+          title="Bookmarks"
+          onClick={() => this.setState({ dropdownOpen: !dropdownOpen })}
+        >
+          <FaBookmark />
         </button>
 
         <Dropdown
@@ -97,6 +95,7 @@ class BookmarkHeader extends React.Component {
               >
                 <span>{x.name}</span>
                 <FaTrash
+                  className="Remove"
                   title="Remove bookmark"
                   onClick={(event) => { event.stopPropagation(); this.removeBookmark(x.path); }}
                 />

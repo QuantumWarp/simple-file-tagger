@@ -6,7 +6,7 @@ import BookmarkHeader from './header/BookmarkHeader';
 import PathHeader from './header/PathHeader';
 import FileDetail from './file-detail/FileDetail';
 import FileList from './file-explorer/FileList';
-import TagContainer from './tagging/TagContainer';
+import FileEditor from './file-editor/FileEditor';
 import Notification from './controls/Notification';
 import NotificationHelper from './helper/notification-helper';
 
@@ -134,45 +134,48 @@ class App extends React.Component {
 
         <TitleBar />
 
-        <header>
-          <BookmarkHeader
-            path={path}
-            onPathChange={(event) => this.setLocation(event)}
-          />
-          <PathHeader
-            path={path}
-            disks={disks}
-            onPathChange={(event) => this.setLocation(event)}
-          />
-        </header>
-
         <main>
-          <article>
-            <div>File Explorer</div>
-            <FileList
-              path={path}
-              filename={filename}
-              files={files}
-              onLocationSelected={(fullPath) => this.setLocation(fullPath)}
-            />
-          </article>
+          <div className="Controls">
+            <article>
+              <h2>File Explorer</h2>
+              <FileList
+                path={path}
+                filename={filename}
+                files={files}
+                onLocationSelected={(fullPath) => this.setLocation(fullPath)}
+              />
+            </article>
 
-          <article>
-            <div>Tagging</div>
-            <TagContainer
-              path={path}
-              filename={filename}
-              onFilenameChange={(newFilename) => this.updateFilename(newFilename)}
-            />
-          </article>
+            {filename && (
+              <FileEditor
+                path={path}
+                filename={filename}
+                onFilenameChange={(newFilename) => this.updateFilename(newFilename)}
+              />
+            )}
+          </div>
 
-          <article>
-            <div>File Preview</div>
-            <FileDetail
-              path={path}
-              filename={filename}
-            />
-          </article>
+          <div className="Preview">
+            <header>
+              <PathHeader
+                path={path}
+                disks={disks}
+                onPathChange={(event) => this.setLocation(event)}
+              />
+
+              <BookmarkHeader
+                path={path}
+                onPathChange={(event) => this.setLocation(event)}
+              />
+            </header>
+
+            <article>
+              <FileDetail
+                path={path}
+                filename={filename}
+              />
+            </article>
+          </div>
         </main>
       </div>
     );

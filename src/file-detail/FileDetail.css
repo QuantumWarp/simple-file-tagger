@@ -1,12 +1,16 @@
 .File-detail {
   flex: 1;
   padding: 10px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
   overflow: auto;
 }
 
-.Message {
-  margin-top: 50px;
+.File-detail .Zoom-container {
+  height: 100%;
+  width: 100%;
+}
+
+.File-detail img {
+  height: 100%;
+  width: 100%;
+  object-fit: contain;
 }

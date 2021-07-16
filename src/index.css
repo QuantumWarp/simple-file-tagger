@@ -1,20 +1,35 @@
+/* Variables */
+
+:root {
+  --text-color: white;
+  --separator-color: rgb(200, 200, 200);
+  --title-bar-color: rgb(50, 50, 50);
+  --secondary-background-color: rgb(40, 40, 40);
+  --main-background-color: rgb(30, 30, 30);
+  --hover-background-color: rgb(80, 80, 80);
+
+  --success-color: #51a351;
+  --info-color: #2f96b4;
+  --warning-color: #f89406;
+  --error-color: #bd362f;
+}
+
+/* Body */
+
 body {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
+  font-size: 15px;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+body, input[type=date] {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
 }
 
-label {
-  font-size: calc(10px + 1vmin);
-}
+/* Button */
 
 button {
   background: none;
@@ -25,12 +40,13 @@ button {
 	cursor: pointer;
   outline: inherit;
   display: flex;
-  align-items: center;
+  flex-direction: row;
   justify-content: center;
+  align-items: center;
 }
 
 button.clicky {
-  font-size: calc(10px + 1vmin);
+  font-size: 15px;
   background-color: white; 
   color: black; 
   border: 2px solid #008CBA;
@@ -40,41 +56,49 @@ button.clicky:hover {
   color: white;
 }
 
+/* Input and Labels */
+
+label > span {
+  font-size: 14px;
+}
+
 input[type=text], input[type=date] {
   width: 100%;
-  padding: calc(5px + 0.6vmin) calc(5px + 1vmin);
-  font-size: calc(10px + 1vmin);
+  padding: 4px;
+  font-size: 18px;
   margin: 8px 0;
   display: inline-block;
   border: 1px solid #ccc;
-  border-radius: 4px;
   box-sizing: border-box;
+  outline: none;
+}
+input[type=text]:focus, input[type=date]:focus {
+  background-color: lightblue;
 }
 
+/* Checkbox */
+
 .checkbox {
-  display: block;
+  display: flex;
   position: relative;
-  padding-left: 35px;
-  margin-bottom: 12px;
   cursor: pointer;
+  align-items: center;
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none;
 }
 .checkbox > input[type=checkbox] {
-  position: absolute;
   opacity: 0;
   cursor: pointer;
   height: 0;
   width: 0;
 }
 .checkbox > .box {
-  position: absolute;
-  top: 0;
-  left: 0;
-  height: 25px;
-  width: 25px;
+  position: relative;
+  margin-right: 8px;
+  height: 20px;
+  width: 20px;
   background-color: #eee;
 }
 .checkbox:hover > .box {
@@ -92,9 +116,9 @@ input[type=text], input[type=date] {
   display: block;
 }
 .checkbox > .box:after {
-  left: 9px;
-  top: 5px;
-  width: 5px;
+  left: 7px;
+  top: 2px;
+  width: 4px;
   height: 10px;
   border: solid white;
   border-width: 0 3px 3px 0;
@@ -102,6 +126,8 @@ input[type=text], input[type=date] {
   -ms-transform: rotate(45deg);
   transform: rotate(45deg);
 }
+
+/* Scrollbar */
 
 ::-webkit-scrollbar {
   width: 10px;

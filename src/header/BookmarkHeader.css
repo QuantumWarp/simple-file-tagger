@@ -1,6 +1,6 @@
 .Bookmark-header {
   display: flex;
-  position: relative;
+  font-size: 20px;
 }
 .Bookmark-header > :first-child {
   margin: 0px 10px;
@@ -10,13 +10,20 @@
   min-width: 300px;
   max-width: 600px;
   padding: 4px 8px;
-  font-size: calc(10px + 1vmin);
+  font-size: 15px;
   display: flex;
   justify-content: space-between;
   align-items: center;
+  background-color: var(--secondary-background-color);
+}
+.Bookmark-item:hover {
+  background-color: var(--hover-background-color);
 }
 .Bookmark-item > span {
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
+}
+.Bookmark-item .Remove:hover {
+  color: var(--error-color);
 }
