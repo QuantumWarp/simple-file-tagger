@@ -73,7 +73,7 @@ class FileList extends React.Component {
           {this.limitedList.map(
             (x) => (
               <FileNode
-                key={x.name}
+                key={`${path}/${x.name}`}
                 selected={x.name === filename}
                 nodeData={x}
                 onClick={() => onLocationSelected(`${path}/${x.name}`)}

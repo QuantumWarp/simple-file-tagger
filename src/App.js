@@ -1,4 +1,5 @@
 import pathUtil from 'path';
+import Queue from 'promise-queue';
 import React from 'react';
 
 import './App.css';
@@ -19,15 +20,42 @@ const nodeDiskInfo = electron.remote.require('node-disk-info');
 class App extends React.Component {
   static async fileExists(path) {
     return new Promise((resolve) => {
-      fs.access(path, fs.F_OK, (err) => {
-        resolve(!err);
-      });
+      fs.access(
+        path,
+        fs.F_OK,
+        (err) => resolve(!err),
+      );
     });
+  }
+
+  static async rename(oldPath, newPath) {
+    return new Promise((resolve) => {
+      fs.rename(
+        oldPath,
+        newPath,
+        (err) => resolve(!err),
+      );
+    });
+  }
+
+  static async updateRealFilename(oldFullPath, newFullPath, key) {
+    // Take care editing these conditions, the fs.rename will overwrite exisitng files if
+    // provided with an exisiting filename. The 'alreadyExists' condition prevents this.
+    // Be sure to check overwrite is not possible if editing the following code.
+    const alreadyExists = await App.fileExists(newFullPath);
+    if (alreadyExists) {
+      NotificationHelper.notify({ type: 'Error', message: 'Unexpected - Filename already exists.' });
+      return;
+    }
+
+    await App.rename(oldFullPath, newFullPath);
+    NotificationHelper.notify({ key, type: 'Success', message: 'Filename updated' });
   }
 
   constructor() {
     super();
 
+    this.renameQueue = new Queue(1, Infinity);
     this.store = new Store();
     this.state = {
       path: '',
@@ -95,38 +123,32 @@ class App extends React.Component {
     });
   }
 
-  async updateFilename(newFilename) {
+  updateFilename(newFilename) {
     const { files, path, filename } = this.state;
-    const newFiles = [...files];
+
+    if (filename === newFilename) return;
+
+    const alreadyExistingFile = files.find((x) => x.name === newFilename);
+    if (alreadyExistingFile) {
+      NotificationHelper.notify({ type: 'Warning', message: 'Filename already exists.' });
+      return;
+    }
+
     const file = files.find((x) => x.name === filename);
-    const index = newFiles.indexOf(file);
     const newFile = { ...file, name: newFilename };
+
+    const newFiles = [...files];
+    const index = newFiles.indexOf(file);
     newFiles[index] = newFile;
+
     const oldFullPath = `${path}/${filename}`;
     const newFullPath = `${path}/${newFilename}`;
-    // Take care editing these conditions, the fs.rename will overwrite exisitng files if
-    // provided with an exisiting filename. The 'alreadyExists' condition prevents this.
-    // Be sure to check overwrite is not possible if editing the following code.
-    const alreadyExists = await App.fileExists(newFullPath);
 
-    return new Promise((resolve) => {
-      if (oldFullPath === newFullPath) {
-        resolve(true);
-      } else if (alreadyExists) {
-        NotificationHelper.notify({ type: 'Warning', message: 'Filename already exists.' });
-        resolve(false);
-      } else {
-        fs.rename(
-          oldFullPath,
-          newFullPath,
-          () => {
-            this.setState({ files: newFiles, filename: newFilename });
-            NotificationHelper.notify({ key: `${index}-${path}`, type: 'Success', message: 'Filename updated' });
-            resolve(true);
-          },
-        );
-      }
-    });
+    // Optimistically updating
+    this.setState({ files: newFiles, filename: newFilename });
+
+    // Add latest update to queue of updates
+    this.renameQueue.add(() => App.updateRealFilename(oldFullPath, newFullPath, `${index}-${path}`));
   }
 
   render() {

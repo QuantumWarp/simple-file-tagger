@@ -10,6 +10,7 @@
     "electron-is-dev": "^1.2.0",
     "electron-store": "^8.0.0",
     "node-disk-info": "^1.1.0",
+    "promise-queue": "^2.2.5",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-icons": "^4.2.0",
