@@ -4,10 +4,14 @@ import { FaTrash } from 'react-icons/fa';
 
 import './TagList.css';
 
+const electron = window.require('electron');
+const Store = electron.remote.require('electron-store');
+
 class TagList extends React.Component {
   constructor(props) {
     super(props);
 
+    this.store = new Store();
     this.state = {
       newTagInput: '',
       tagOptions: [],
@@ -15,19 +19,19 @@ class TagList extends React.Component {
   }
 
   componentDidMount() {
-    const tagOptions = localStorage.getItem('tagOptions');
+    const tagOptions = this.store.get('tagOptions');
 
     if (tagOptions) {
-      this.setState({ tagOptions: JSON.parse(tagOptions) });
+      this.setState({ tagOptions });
     }
   }
 
-  componentDidUpdate(prevProps, prevState) {
+  componentDidUpdate(_prevProps, prevState) {
     const { tags } = this.props;
     const { tagOptions } = this.state;
 
     if (tagOptions.length !== prevState.tagOptions.length) {
-      localStorage.setItem('tagOptions', JSON.stringify(tagOptions));
+      this.store.set('tagOptions', tagOptions);
     }
 
     const newTagOptions = tagOptions

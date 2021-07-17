@@ -8,10 +8,14 @@ import './BookmarkHeader.css';
 import Dropdown from '../controls/Dropdown';
 import NotificationHelper from '../helper/notification-helper';
 
+const electron = window.require('electron');
+const Store = electron.remote.require('electron-store');
+
 class BookmarkHeader extends React.Component {
   constructor(props) {
     super(props);
 
+    this.store = new Store();
     this.state = {
       dropdownOpen: false,
       bookmarks: [],
@@ -19,16 +23,16 @@ class BookmarkHeader extends React.Component {
   }
 
   componentDidMount() {
-    const bookmarks = localStorage.getItem('bookmarks');
+    const bookmarks = this.store.get('bookmarks');
     if (bookmarks) {
-      this.setState({ bookmarks: JSON.parse(bookmarks) });
+      this.setState({ bookmarks });
     }
   }
 
   componentDidUpdate(prevProps, prevState) {
     const { bookmarks } = this.state;
     if (bookmarks.length !== prevState.bookmarks.length) {
-      localStorage.setItem('bookmarks', JSON.stringify(bookmarks));
+      this.store.set('bookmarks', bookmarks);
     }
   }
 

@@ -13,6 +13,7 @@ import NotificationHelper from './helper/notification-helper';
 
 const electron = window.require('electron');
 const fs = electron.remote.require('fs');
+const Store = electron.remote.require('electron-store');
 const nodeDiskInfo = electron.remote.require('node-disk-info');
 
 class App extends React.Component {
@@ -27,6 +28,7 @@ class App extends React.Component {
   constructor() {
     super();
 
+    this.store = new Store();
     this.state = {
       path: '',
       filename: null,
@@ -45,7 +47,7 @@ class App extends React.Component {
       this.setState({ files: newFiles });
     });
 
-    const path = localStorage.getItem('path');
+    const path = this.store.get('path');
     if (path) {
       await this.setLocation(path);
     }
@@ -55,7 +57,7 @@ class App extends React.Component {
   componentDidUpdate(_prevProps, prevState) {
     const { path } = this.state;
     if (path !== prevState.path) {
-      localStorage.setItem('path', path);
+      this.store.set('path', path);
       electron.ipcRenderer.send('loadFiles', `${path}/`);
     }
   }

@@ -11,10 +11,11 @@ class FileNode extends React.Component {
   rootEl = React.createRef();
 
   shouldComponentUpdate(nextProps) {
-    const { nodeData, selected } = this.props;
+    const { nodeData, selected, onClick } = this.props;
     const newNodeData = nextProps.nodeData;
     return (nodeData && nodeData.name) !== (newNodeData && newNodeData.name)
-      || selected !== nextProps.selected;
+      || selected !== nextProps.selected
+      || onClick !== nextProps.onClick;
   }
 
   componentDidUpdate() {
