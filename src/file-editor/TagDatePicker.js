@@ -4,103 +4,89 @@ import React from 'react';
 import './TagDatePicker.css';
 
 class TagDatePicker extends React.Component {
-  defaultState = {
-    date: '',
-    day: false,
-    month: false,
-    year: false,
-  };
+  get parsedDate() {
+    const { value } = this.props;
 
-  constructor(props) {
-    super(props);
-
-    this.state = this.defaultState;
-  }
-
-  componentDidUpdate(prevProps, prevState) {
-    const { value, onChange } = this.props;
-
-    if (value !== prevProps.value) {
-      this.parse(value);
-      return;
-    }
-
-    const orderCorrected = this.correctOrdering(prevState);
-    if (orderCorrected) return;
-
-    let {
-      date, day, month, year,
-    } = this.state;
-    const updateDate = date
-      && (date !== prevState.date
-      || day !== prevState.day
-      || month !== prevState.month
-      || year !== prevState.year);
-
-    if (updateDate) {
-      const splitDate = date.split('-');
-      year = year ? splitDate[0] : '';
-      month = month ? `-${splitDate[1]}` : '';
-      day = day ? `-${splitDate[2]}` : '';
-      date = year + month + day;
-      onChange(date);
-    }
-  }
-
-  parse(value) {
     if (!value) {
-      this.setState(this.defaultState);
-      return;
+      return {
+        date: '',
+        day: false,
+        month: false,
+        year: false,
+      };
     }
 
     const valueSplit = value.split('-');
-    this.setState({
+    return {
       date: value + (valueSplit[1] ? '' : '-01') + (valueSplit[2] ? '' : '-01'),
       year: Boolean(valueSplit[0]),
       month: Boolean(valueSplit[1]),
       day: Boolean(valueSplit[2]),
-    });
+    };
   }
 
-  correctOrdering(prevState) {
-    const { day, month, year } = this.state;
+  correctOrdering(updatedParsedDate) {
+    const { day, month, year } = updatedParsedDate;
     const isValidOrdering = year >= month && month >= day;
 
-    if (isValidOrdering) return false;
+    if (isValidOrdering) return updatedParsedDate;
 
-    const isChecking = year > prevState.year || month > prevState.month || day > prevState.day;
+    const isChecking = year > this.parsedDate.year
+      || month > this.parsedDate.month
+      || day > this.parsedDate.day;
 
     if (isChecking) {
-      this.setState({
+      return {
+        ...updatedParsedDate,
+        day,
         month: day || month,
         year: day || month || year,
-      });
-    } else {
-      this.setState({
-        month: year && month,
-        day: year && month && day,
-      });
+      };
     }
 
-    return true;
+    return {
+      ...updatedParsedDate,
+      day: year && month && day,
+      month: year && month,
+      year,
+    };
   }
 
-  dateChanged(newDate) {
-    const { date } = this.state;
+  dateChanged(updatedProps) {
+    const newlyCreatedDate = !this.parsedDate.date && updatedProps.date;
 
-    if (!date) {
-      this.setState({
-        date: newDate, day: true, month: true, year: true,
-      });
-    } else {
-      this.setState({ date: newDate });
-    }
+    let updatedParsedDate = {
+      ...this.parsedDate,
+      ...updatedProps,
+      ...(newlyCreatedDate ? {
+        day: true,
+        month: true,
+        year: true,
+      } : {}),
+    };
+
+    updatedParsedDate = this.correctOrdering(updatedParsedDate);
+
+    let {
+      date, day, month, year,
+    } = updatedParsedDate;
+
+    if (!date) return;
+
+    const splitDate = date.split('-');
+    year = year ? splitDate[0] : '';
+    month = month ? `-${splitDate[1]}` : '';
+    day = day ? `-${splitDate[2]}` : '';
+    date = year + month + day;
+
+    const { onChange } = this.props;
+    onChange(date);
   }
 
   render() {
     const {
       date, day, month, year,
-    } = this.state;
+    } = this.parsedDate;
 
     return (
       <div className="Tag-date-picker">
@@ -110,7 +96,7 @@ class TagDatePicker extends React.Component {
             id="date-tag"
             type="date"
             value={date}
-            onChange={(event) => this.dateChanged(event.target.value)}
+            onChange={(event) => this.dateChanged({ date: event.target.value })}
           />
         </label>
 
@@ -123,7 +109,7 @@ class TagDatePicker extends React.Component {
               id="tag-day"
               type="checkbox"
               checked={day}
-              onChange={(event) => this.setState({ day: event.target.checked })}
+              onChange={(event) => this.dateChanged({ day: event.target.checked })}
             />
             <div className="box" />
             <span>Day</span>
@@ -137,7 +123,7 @@ class TagDatePicker extends React.Component {
               id="tag-month"
               type="checkbox"
               checked={month}
-              onChange={(event) => this.setState({ month: event.target.checked })}
+              onChange={(event) => this.dateChanged({ month: event.target.checked })}
             />
             <div className="box" />
             <span>Month</span>
@@ -151,7 +137,7 @@ class TagDatePicker extends React.Component {
               id="tag-year"
               type="checkbox"
               checked={year}
-              onChange={(event) => this.setState({ year: event.target.checked })}
+              onChange={(event) => this.dateChanged({ year: event.target.checked })}
             />
             <div className="box" />
             <span>Year</span>
