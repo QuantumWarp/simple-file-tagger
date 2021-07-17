@@ -25,3 +25,7 @@ This project was created to quickly and easily tag files. The tagging method is 
 - Using a scoped css library would have made styling easier
 - Refactor out more logic into helpers
 - Use centralised store and actions to improve ease of following logic
+
+### Bugs
+
+- Occasionally the filename will fail to update, resulting in a mismatch between app filename and reality. Should improve update process.

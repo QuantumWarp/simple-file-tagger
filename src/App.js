@@ -102,6 +102,9 @@ class App extends React.Component {
     newFiles[index] = newFile;
     const oldFullPath = `${path}/${filename}`;
     const newFullPath = `${path}/${newFilename}`;
+    // Take care editing these conditions, the fs.rename will overwrite exisitng files if
+    // provided with an exisiting filename. The 'alreadyExists' condition prevents this.
+    // Be sure to check overwrite is not possible if editing the following code.
     const alreadyExists = await App.fileExists(newFullPath);
 
     return new Promise((resolve) => {

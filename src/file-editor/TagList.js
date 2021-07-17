@@ -41,9 +41,12 @@ class TagList extends React.Component {
 
   addTag() {
     const { tagOptions, newTagInput } = this.state;
+    const trimmedTag = newTagInput.trim();
 
-    if (!tagOptions.includes(newTagInput)) {
-      const newTagOptions = tagOptions.concat([newTagInput]);
+    if (tagOptions.includes(trimmedTag)) {
+      this.updateTagChecked(trimmedTag, true);
+    } else {
+      const newTagOptions = tagOptions.concat([trimmedTag]);
       this.setState({ tagOptions: newTagOptions });
       this.updateTagChecked(newTagInput, true);
     }
@@ -93,35 +96,37 @@ class TagList extends React.Component {
         </div>
 
         <div className="List">
-          {tagOptions.sort().map((x) => (
-            <div
-              className="Tag"
-              key={x}
-            >
-              <label
-                htmlFor={`tag-${x}`}
-                className="checkbox"
+          {tagOptions
+            .sort((a, b) => a.toLowerCase().localeCompare(b.toLowerCase()))
+            .map((x) => (
+              <div
+                className="Tag"
+                key={x}
               >
-                <input
-                  id={`tag-${x}`}
-                  type="checkbox"
-                  checked={tags.includes(x)}
-                  onChange={(event) => this.updateTagChecked(x, event.target.value)}
-                />
-                <div className="box" />
-                {x}
-              </label>
+                <label
+                  htmlFor={`tag-${x}`}
+                  className="checkbox"
+                >
+                  <input
+                    id={`tag-${x}`}
+                    type="checkbox"
+                    checked={tags.includes(x)}
+                    onChange={(event) => this.updateTagChecked(x, event.target.value)}
+                  />
+                  <div className="box" />
+                  {x}
+                </label>
 
-              <button
-                type="button"
-                className="Remove"
-                title="Remove"
-                onClick={() => this.removeTag(x)}
-              >
-                <FaTrash />
-              </button>
-            </div>
-          ))}
+                <button
+                  type="button"
+                  className="Remove"
+                  title="Remove"
+                  onClick={() => this.removeTag(x)}
+                >
+                  <FaTrash />
+                </button>
+              </div>
+            ))}
         </div>
       </div>
     );

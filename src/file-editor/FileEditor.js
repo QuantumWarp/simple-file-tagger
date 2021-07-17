@@ -8,53 +8,22 @@ import TagDatePicker from './TagDatePicker';
 import TagList from './TagList';
 
 class TagContainer extends React.Component {
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      name: '',
-      dateTag: '',
-      tags: [],
-      extension: '',
-    };
+  get parsedFilename() {
+    const { filename } = this.props;
+    return FileHelper.parseFilename(filename);
   }
 
-  componentDidUpdate(prevProps, prevState) {
-    const { path, filename, onFilenameChange } = this.props;
-    const {
-      name, dateTag, tags, extension,
-    } = this.state;
-
-    if (!this.externalUpdate
-      && (name !== prevState.name
-      || dateTag !== prevState.dateTag
-      || tags.length !== prevState.tags.length
-      || extension !== prevState.extension)
-    ) {
-      const newFilename = FileHelper.createFilename(this.state);
-      onFilenameChange(newFilename);
-    }
-
-    this.externalUpdate = false;
-
-    if (Boolean(filename)
-      && (path !== prevProps.path
-      || filename !== prevProps.filename)
-    ) {
-      const parsedFile = FileHelper.parseFilename(filename);
-      this.externalUpdate = true;
-      // eslint-disable-next-line react/no-did-update-set-state
-      this.setState({
-        ...parsedFile,
-        name: name.trim() === parsedFile.name.trim() ? name : parsedFile.name,
-      });
-    }
+  generateFilename(updatedProps) {
+    const newParsedFilename = { ...this.parsedFilename, ...updatedProps };
+    const { onFilenameChange } = this.props;
+    const newFilename = FileHelper.createFilename(newParsedFilename);
+    onFilenameChange(newFilename);
   }
 
   render() {
     const {
       name, dateTag, tags, extension,
-    } = this.state;
+    } = this.parsedFilename;
 
     return (
       <>
@@ -63,14 +32,14 @@ class TagContainer extends React.Component {
           <BasicInfo
             name={name}
             extension={extension}
-            onChange={(nameUpdate, extensionUpdate) => this.setState({
+            onChange={(nameUpdate, extensionUpdate) => this.generateFilename({
               name: nameUpdate, extension: extensionUpdate,
             })}
           />
 
           <TagDatePicker
             value={dateTag}
-            onChange={(dateTagUpdate) => this.setState({ dateTag: dateTagUpdate })}
+            onChange={(dateTagUpdate) => this.generateFilename({ dateTag: dateTagUpdate })}
           />
         </article>
 
@@ -78,7 +47,7 @@ class TagContainer extends React.Component {
           <h2>Tagging</h2>
           <TagList
             tags={tags}
-            onTagsChange={(tagsUpdate) => this.setState({ tags: tagsUpdate })}
+            onTagsChange={(tagsUpdate) => this.generateFilename({ tags: tagsUpdate })}
           />
         </article>
       </>
@@ -87,13 +56,11 @@ class TagContainer extends React.Component {
 }
 
 TagContainer.propTypes = {
-  path: PropTypes.string,
   filename: PropTypes.string,
   onFilenameChange: PropTypes.func.isRequired,
 };
 
 TagContainer.defaultProps = {
-  path: '',
   filename: '',
 };
 

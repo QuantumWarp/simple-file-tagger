@@ -11,7 +11,7 @@
   background-color: var(--hover-background-color);
 }
 
-.File-node .Selected {
+.File-node.Selected {
   background-color: var(--hover-background-color);
 }
 

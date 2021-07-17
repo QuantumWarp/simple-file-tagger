@@ -6,6 +6,10 @@
   overflow-y: auto;
 }
 
+.Tag-list {
+  margin-bottom: 10px;
+}
+
 .Tag-list .Tag-add {
   display: flex;
   margin-bottom: 10px;
