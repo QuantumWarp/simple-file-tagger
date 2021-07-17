@@ -8,6 +8,23 @@ import './FileNode.css';
 import FileHelper from '../helper/file-helper';
 
 class FileNode extends React.Component {
+  rootEl = React.createRef();
+
+  shouldComponentUpdate(nextProps) {
+    const { nodeData, selected } = this.props;
+    const newNodeData = nextProps.nodeData;
+    return (nodeData && nodeData.name) !== (newNodeData && newNodeData.name)
+      || selected !== nextProps.selected;
+  }
+
+  componentDidUpdate() {
+    const { selected } = this.props;
+
+    if (selected) {
+      this.rootEl.current.scrollIntoView({ block: 'nearest' });
+    }
+  }
+
   get symbol() {
     const { nodeData } = this.props;
     const info = FileHelper.getInfo(nodeData);
@@ -24,6 +41,7 @@ class FileNode extends React.Component {
 
     return (
       <button
+        ref={this.rootEl}
         type="button"
         className={`File-node ${selected ? 'Selected' : ''}`}
         title={nodeData.name}

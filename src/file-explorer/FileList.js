@@ -6,18 +6,37 @@ import './FileList.css';
 import FileNode from './FileNode';
 
 class FileList extends React.Component {
+  rootEl = React.createRef();
+
   constructor(props) {
     super(props);
 
-    this.state = { limit: 40 };
+    this.state = { limit: 0 };
+    this.boundSetMinLimit = this.setMinLimit.bind(this);
+  }
+
+  componentDidMount() {
+    this.setMinLimit();
+    window.addEventListener('resize', this.boundSetMinLimit);
   }
 
   componentDidUpdate(prevProps) {
-    const { files } = this.props;
+    const { path } = this.props;
 
-    if (files !== prevProps.files) {
-      this.resetLimit();
+    if (path !== prevProps.path) {
+      // eslint-disable-next-line react/no-did-update-set-state
+      this.setState({ limit: this.minLimit });
     }
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener('resize', this.boundSetMinLimit);
+  }
+
+  get minLimit() {
+    const height = this.rootEl.current.clientHeight;
+    const fitNumber = height / 20;
+    return fitNumber + 10;
   }
 
   get limitedList() {
@@ -26,8 +45,12 @@ class FileList extends React.Component {
     return files.slice(0, limit);
   }
 
-  resetLimit() {
-    this.setState({ limit: 40 });
+  setMinLimit() {
+    const { limit } = this.state;
+
+    if (limit < this.minLimit) {
+      this.setState({ limit: this.minLimit });
+    }
   }
 
   render() {
@@ -37,7 +60,10 @@ class FileList extends React.Component {
     const { limit } = this.state;
 
     return (
-      <div className="File-list">
+      <div
+        ref={this.rootEl}
+        className="File-list"
+      >
         <InfiniteScroll
           pageStart={0}
           loadMore={() => { this.setState({ limit: limit + 20 }); }}
