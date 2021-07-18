@@ -36,6 +36,7 @@ class PathHeader extends React.Component {
     return (
       <div className="Path-header">
         <Dropdown
+          align="left"
           open={dropdownOpen}
           onClose={() => this.setState({ dropdownOpen: false })}
         >

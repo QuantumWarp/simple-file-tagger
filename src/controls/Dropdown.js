@@ -31,11 +31,12 @@ class Dropdown extends React.Component {
   }
 
   render() {
-    const { open, children } = this.props;
+    const { align, open, children } = this.props;
 
     return (
       <div
         ref={this.myRef}
+        style={{ [align]: 0 }}
         className={`Dropdown ${open && 'open'}`}
       >
         {children}
@@ -45,12 +46,14 @@ class Dropdown extends React.Component {
 }
 
 Dropdown.propTypes = {
+  align: PropTypes.string,
   children: PropTypes.arrayOf(PropTypes.node).isRequired,
   open: PropTypes.bool.isRequired,
   onClose: PropTypes.func,
 };
 
 Dropdown.defaultProps = {
+  align: 'right',
   onClose: () => {},
 };
 

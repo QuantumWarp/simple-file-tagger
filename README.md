@@ -4,7 +4,7 @@ This project was created to quickly and easily tag files. The tagging method is 
 
 ## Features
 
-- Bookmarking commonlu folders
+- Bookmarking commonly used folders
 - Preview selected file if it is an image
 - Support date tags
 - Allow adding custom tags
@@ -14,10 +14,12 @@ This project was created to quickly and easily tag files. The tagging method is 
 
 ### Features
 
+- Sort folders above files
 - Allow deletion of files
 - Add an in app help section
 - Option for generating unique guid for initial filename
-- Add search/filtering of file explorer
+- Add search/filtering of file explorer, especially to show untagged files
+- Easier to use date picker
 
 ### Code
 
@@ -28,4 +30,4 @@ This project was created to quickly and easily tag files. The tagging method is 
 
 ### Bugs
 
-- Occasionally the filename will fail to update, resulting in a mismatch between app filename and reality. Should improve update process.
+- Although overwriting is prevented, failing file renames are not handled gracefully

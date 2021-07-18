@@ -5,7 +5,6 @@
   overflow: hidden;
   transition: opacity 0.2s ease-out;
   top: 100%;
-  right: 0;
 }
 .Dropdown.open {
   opacity: 1;
