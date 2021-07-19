@@ -60,6 +60,7 @@ class App extends React.Component {
     this.state = {
       path: '',
       filename: null,
+      originalFilename: null,
       files: [],
       disks: [],
     };
@@ -102,11 +103,11 @@ class App extends React.Component {
         if (err) {
           NotificationHelper.notify({ type: 'Error', message: 'Invalid file or path' });
         } else if (stats.isDirectory()) {
-          this.setState({ path: fullPath, filename: null });
+          this.setState({ path: fullPath, filename: null, originalFilename: null });
         } else {
           const filename = fullPath.split('/')[fullPath.split('/').length - 1];
           const path = fullPath.substring(0, fullPath.length - filename.length - 1);
-          this.setState({ path, filename });
+          this.setState({ path, filename, originalFilename: filename });
         }
 
         resolve();
@@ -153,7 +154,7 @@ class App extends React.Component {
 
   render() {
     const {
-      disks, files, path, filename,
+      disks, files, path, filename, originalFilename,
     } = this.state;
 
     return (
@@ -201,7 +202,7 @@ class App extends React.Component {
             <article>
               <FileDetail
                 path={path}
-                filename={filename}
+                filename={originalFilename}
               />
             </article>
           </div>
