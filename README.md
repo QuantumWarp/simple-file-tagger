@@ -20,6 +20,7 @@ This project was created to quickly and easily tag files. The tagging method is 
 - Option for generating unique guid for initial filename
 - Add search/filtering of file explorer, especially to show untagged files
 - Easier to use date picker
+- Order files numerically (the same order as the windows default, Doc 2 should come before Doc 10)
 
 ### Code
 
@@ -31,3 +32,6 @@ This project was created to quickly and easily tag files. The tagging method is 
 ### Bugs
 
 - Although overwriting is prevented, failing file renames are not handled gracefully
+- Clicking an already selected file after editing it a little results in an error
+- Keeping on typing in the date field creates a new tag
+- Permission error instead indicates a 'File already exists' error
